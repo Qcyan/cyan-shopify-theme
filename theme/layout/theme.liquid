@@ -220,6 +220,9 @@
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
 
+    {% comment %} Vite 自定义前端入口（开发走 Vite HMR，生产走 assets） {% endcomment %}
+    {% render 'vite-tag', entry: 'theme.js' %}
+
     {%- unless settings.type_body_font.system? -%}
       <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
     {%- endunless -%}

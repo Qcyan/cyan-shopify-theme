@@ -1,25 +1,19 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'node:path';
+import shopify from 'vite-plugin-shopify';
 
 export default defineConfig({
-  root: resolve(__dirname, 'src'),
+  plugins: [
+    shopify({
+      themeRoot: 'theme',
+      sourceCodeDir: 'src',
+      entrypointsDir: 'src/entrypoints',
+      snippetFile: 'vite-tag.liquid',
+      versionNumbers: false,
+      themeHotReload: true,
+    }),
+  ],
   build: {
-    outDir: resolve(__dirname, 'theme/assets'),
+    // 保留 Dawn 原有 assets，避免清空 theme/assets
     emptyOutDir: false,
-    rollupOptions: {
-      input: {
-        'theme-custom': resolve(__dirname, 'src/entrypoints/theme.js'),
-        'theme-custom-css': resolve(__dirname, 'src/entrypoints/theme.css'),
-      },
-      output: {
-        entryFileNames: '[name].js',
-        assetFileNames: '[name][extname]',
-        chunkFileNames: '[name].js',
-      },
-    },
-    cssCodeSplit: true,
-  },
-  server: {
-    origin: 'http://localhost:5173',
   },
 });

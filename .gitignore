@@ -3,15 +3,13 @@ node_modules/
 Thumbs.db
 *.log
 .shopify/
+.env
 .env.local
 
-# Vite
+# Vite 内部缓存（构建产物 theme-*.js/css 与 vite-tag 仍入库，方便直接 theme push）
+theme/assets/.vite/
+
+# 旧版手写 Vite 产物（已改用 vite-plugin-shopify 哈希文件名）
 theme/assets/theme-custom.js
 theme/assets/theme-custom-css.css
 theme/assets/theme-custom.js.map
-
-# 由 src 构建生成的文件（保留 manifest 便于清理，但可按需忽略产物）
-# 若希望 theme 内自定义区块也入库方便 CLI 直推，请勿忽略下列项：
-# theme/sections/hero-banner.liquid
-# theme/assets/section-*.css
-# theme/.src-manifest.json

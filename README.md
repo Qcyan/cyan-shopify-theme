@@ -11,7 +11,7 @@
 ```
 shopify-dev-theme/
 ├── src/                          # 源码（可分层）
-│   ├── entrypoints/              # Vite 全局 JS/CSS 入口
+│   ├── entrypoints/              # vite-plugin-shopify 入口（theme.js / theme.css）
 │   ├── sections/
 │   │   └── marketing/
 │   │       └── hero-banner/      # 同名 liquid + css (+ 可选 js)
@@ -20,20 +20,26 @@ shopify-dev-theme/
 │   └── snippets/
 │       └── <domain>/<name>/
 ├── theme/                        # Shopify 产物（扁平）
-│   ├── assets/
-│   ├── config/
-│   ├── layout/
-│   ├── locales/
-│   ├── sections/                 # 含 Dawn 原版 + 构建生成的自定义区块
-│   ├── snippets/
-│   └── templates/
+│   ├── assets/                   # Dawn + Vite 哈希产物
+│   ├── snippets/vite-tag.liquid  # 插件自动生成，勿手改
+│   ├── sections/                 # Dawn 原版 + build-liquid 产物
+│   └── ...
 ├── scripts/
-│   ├── build-liquid.mjs          # 扁平化拷贝 Liquid/CSS
-│   └── watch-liquid.mjs          # 开发时监听 src
+│   ├── build-liquid.mjs          # Liquid 分层 → 扁平
+│   └── watch-liquid.mjs
 ├── package.json
-├── vite.config.js
+├── vite.config.js                # vite-plugin-shopify
 └── start.bat
 ```
+
+### 前端资源（vite-plugin-shopify）
+
+- 入口：`src/entrypoints/theme.js`（已 `import './theme.css'`）
+- 布局引入：`theme/layout/theme.liquid` 中  
+  `{% render 'vite-tag', entry: 'theme.js' %}`
+- 开发：Vite 提供 HMR；生产：`vite build` 写入 `theme/assets/` 哈希文件，并由 `vite-tag` 引用
+- 别名：`@/`、`~/` → `src/`（例如 `import '@/sections/...'`）
+
 
 ### 命名约定（构建规则）
 
@@ -63,7 +69,7 @@ npm install
 # 构建：src → theme
 npm run build
 
-# 本地开发（监听 src + theme dev）
+# 本地开发（liquid 监听 + Vite HMR + theme dev）
 npm run dev
 # 或双击 start.bat
 
@@ -94,9 +100,18 @@ npm run pull
 1. **不要手改** `theme/` 里由构建生成的自定义文件（文件头或 manifest 可辨认）；改 `src/` 再构建。
 2. `theme/templates/*.json`、`theme/config/settings_data.json` 可能被主题编辑器改写，拉取/合并时注意冲突。
 3. `npm run pull` 拉的是扁平主题，不会自动还原成 `src/` 分层；自定义逻辑以 `src` 为准。
-4. 全局 JS/CSS 走 Vite：`src/entrypoints/theme.*` → `theme/assets/theme-custom.*`（需在 `layout/theme.liquid` 中自行引入后才会加载）。
+4. 不要手改 `theme/snippets/vite-tag.liquid`（每次 Vite 构建会覆盖）。
+5. Section 级 CSS 仍可由 `build-liquid` 拷到 `assets/section-*.css`；需要打包/HMR 的 JS 请挂到 `src/entrypoints` 或用 `@/` import。
+
+## 学习文档
+
+- [主题作品：简约轻奢 DTC](docs/主题作品-简约轻奢DTC.md)
+- [项目设计：源码分层 + 打包](docs/项目设计.md)
+- [开发流程](docs/开发流程.md)
+- [Liquid 学习笔记](docs/liquid-学习笔记.md)
 
 ## 参考
 
 - [Shopify 主题架构](https://shopify.dev/docs/storefronts/themes/architecture)
 - [Shopify CLI Theme](https://shopify.dev/docs/api/shopify-cli/theme)
+- [vite-plugin-shopify（Volt）](https://shopify-vite.barrelny.com/guide/)
