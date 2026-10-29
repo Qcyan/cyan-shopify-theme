@@ -1,0 +1,17 @@
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+.shopify/
+.env.local
+
+# Vite
+theme/assets/theme-custom.js
+theme/assets/theme-custom-css.css
+theme/assets/theme-custom.js.map
+
+# 由 src 构建生成的文件（保留 manifest 便于清理，但可按需忽略产物）
+# 若希望 theme 内自定义区块也入库方便 CLI 直推，请勿忽略下列项：
+# theme/sections/hero-banner.liquid
+# theme/assets/section-*.css
+# theme/.src-manifest.json
