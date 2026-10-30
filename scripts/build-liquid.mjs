@@ -3,15 +3,13 @@
  *
  * 约定:
  *   src/sections/<domain>/<name>/<name>.liquid  → theme/sections/<name>.liquid
- *   src/sections/<domain>/<name>/<name>.css     → theme/assets/section-<name>.css
- *   src/snippets/<domain>/<name>/<name>.liquid  → theme/snippets/<name>.liquid
- *   src/snippets/<domain>/<name>/<name>.css     → theme/assets/snippet-<name>.css
+ *   src/sections/<domain>/<name>/<name>.css     → 注入 {% stylesheet %}，并可选拷到 assets/
+ *   src/snippets/... 同理
  *
  * 同名冲突时后者覆盖前者并打印警告。
  */
 
 import {
-  cpSync,
   mkdirSync,
   readdirSync,
   readFileSync,
@@ -85,6 +83,24 @@ function readPrevManifest() {
   }
 }
 
+/** 去掉手写的 asset CSS 引用，避免与 {% stylesheet %} 重复 */
+function stripAssetStylesheetTags(liquid) {
+  return liquid.replace(
+    /\{\{\s*'(?:section|snippet)-[^']+\.css'\s*\|\s*asset_url\s*\|\s*stylesheet_tag\s*\}\}\s*\n?/g,
+    ''
+  );
+}
+
+/** 将同名 CSS 注入为 Shopify {% stylesheet %}（随 section/snippet 下发，不依赖 assets 同步） */
+function injectStylesheet(liquid, css) {
+  const block = `{% stylesheet %}\n${css.trim()}\n{% endstylesheet %}\n\n`;
+  const cleaned = liquid.replace(/\{%\s*stylesheet\s*%\}[\s\S]*?\{%\s*endstylesheet\s*%\}\s*/g, '');
+  if (cleaned.includes('{% schema %}')) {
+    return cleaned.replace('{% schema %}', `${block}{% schema %}`);
+  }
+  return `${cleaned}\n${block}`;
+}
+
 function main() {
   const units = [...collectUnits('sections'), ...collectUnits('snippets')];
   const seen = new Map();
@@ -111,18 +127,20 @@ function main() {
     const liquidOutRel = `${unit.kind}/${unit.name}.liquid`;
     const liquidOut = join(themeRoot, liquidOutRel);
     ensureDir(dirname(liquidOut));
-    cpSync(unit.liquidPath, liquidOut);
 
+    let liquid = stripAssetStylesheetTags(readFileSync(unit.liquidPath, 'utf8'));
     let cssOutRel = null;
+
     if (unit.cssPath) {
+      const css = readFileSync(unit.cssPath, 'utf8');
+      liquid = injectStylesheet(liquid, css);
+
       const prefix = unit.kind === 'sections' ? 'section' : 'snippet';
       cssOutRel = `assets/${prefix}-${unit.name}.css`;
-      writeFileSync(
-        join(themeRoot, cssOutRel),
-        `${MANAGED_MARKER}${readFileSync(unit.cssPath, 'utf8')}`,
-        'utf8'
-      );
+      writeFileSync(join(themeRoot, cssOutRel), `${MANAGED_MARKER}${css}`, 'utf8');
     }
+
+    writeFileSync(liquidOut, liquid, 'utf8');
 
     manifestItems.push({
       name: unit.name,
@@ -130,10 +148,13 @@ function main() {
       src: unit.rel,
       liquidOut: liquidOutRel,
       cssOut: cssOutRel,
+      stylesheetInjected: Boolean(unit.cssPath),
     });
 
     report.push(
-      `  ${unit.rel} → ${liquidOutRel}` + (cssOutRel ? ` + ${cssOutRel}` : '')
+      `  ${unit.rel} → ${liquidOutRel}` +
+        (unit.cssPath ? ' + {% stylesheet %}' : '') +
+        (cssOutRel ? ` + ${cssOutRel}` : '')
     );
   }
 

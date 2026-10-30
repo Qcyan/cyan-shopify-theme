@@ -6,6 +6,9 @@
 - `theme/`：符合 Shopify 规范的扁平产物（CLI `dev` / `push` 只认这里）
 - 底层为 Shopify **Generated Data / Dawn** 测试主题，店铺：`cyan-dev-store1.myshopify.com`
 
+**设计稿（Stitch）：** [https://stitch.withgoogle.com/projects/1774047669727653192](https://stitch.withgoogle.com/projects/1774047669727653192)  
+本地对照：`stitch/DESIGN.md`、`stitch/desktop-*.html` · 作品说明见 [docs/主题作品-简约轻奢DTC.md](docs/主题作品-简约轻奢DTC.md)
+
 ## 架构
 
 ```

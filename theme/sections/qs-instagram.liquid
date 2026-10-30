@@ -1,0 +1,176 @@
+{% comment %}
+  Instagram 社交�?�?手动上传图片（作品集无需�?IG API�?{% endcomment %}
+
+
+<section class="qs-instagram">
+  <div class="page-width">
+    <div class="qs-instagram__header">
+      {% if section.settings.title != blank %}
+        <h2 class="qs-section-heading">{{ section.settings.title }}</h2>
+      {% endif %}
+      {% if section.settings.subtitle != blank %}
+        <p class="qs-section-subheading">{{ section.settings.subtitle }}</p>
+      {% endif %}
+      {% if section.settings.instagram_url != blank %}
+        <a class="qs-instagram__link" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener">
+          {{ section.settings.instagram_label }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="qs-instagram__grid">
+      {% for block in section.blocks %}
+        <div class="qs-instagram__item" {{ block.shopify_attributes }}>
+          {% if block.settings.link != blank %}
+            <a href="{{ block.settings.link }}" class="qs-instagram__anchor" {% if block.settings.link contains 'http' %}target="_blank" rel="noopener"{% endif %}>
+          {% endif %}
+          {% if block.settings.image != blank %}
+            {{
+              block.settings.image
+              | image_url: width: 800
+              | image_tag:
+                loading: 'lazy',
+                sizes: '(min-width: 990px) 25vw, 50vw',
+                widths: '300, 500, 800',
+                alt: section.settings.title
+            }}
+          {% else %}
+            {{ 'image' | placeholder_svg_tag: 'qs-instagram__placeholder' }}
+          {% endif %}
+          {% if block.settings.link != blank %}
+            </a>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.qs-instagram {
+  padding: var(--qs-section-pad-lg, 5.5rem) 0;
+  background: var(--qs-bg, #fafaf8);
+  border-top: 1px solid var(--qs-border, #eae6df);
+}
+
+.qs-instagram__header {
+  margin-bottom: 2.5rem;
+}
+
+.qs-instagram__link {
+  display: inline-block;
+  margin-top: -1rem;
+  margin-bottom: 0.5rem;
+  color: var(--qs-secondary, #735a36);
+  text-decoration: none;
+  /* label-caps-lg */
+  font-size: var(--qs-label-lg, 12px);
+  font-weight: 500;
+  line-height: var(--qs-label-lg-lh, 16px);
+  letter-spacing: var(--qs-label-tracking, 0.14em);
+  text-transform: uppercase;
+}
+
+.qs-instagram__link:hover {
+  opacity: 0.85;
+}
+
+.qs-instagram__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.qs-instagram__item,
+.qs-instagram__anchor {
+  display: block;
+  overflow: hidden;
+  background: var(--qs-ivory, #f5f3ef);
+  border: 1px solid var(--qs-border, #eae6df);
+}
+
+.qs-instagram__item img,
+.qs-instagram__placeholder {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  transition: opacity 0.35s ease;
+}
+
+.qs-instagram__item:hover img {
+  opacity: 0.92;
+}
+
+@media (max-width: 749px) {
+  .qs-instagram {
+    padding: var(--qs-section-pad-mobile, 3.5rem) 0;
+  }
+
+  .qs-instagram__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Instagram 社交�?,
+  "tag": "section",
+  "class": "section-qs-instagram",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "标题",
+      "default": "In real life"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "副标�?,
+      "default": "Soft light, quiet details—tag us to be featured."
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram 链接"
+    },
+    {
+      "type": "text",
+      "id": "instagram_label",
+      "label": "链接文案",
+      "default": "@yourbrand"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "图片",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "图片"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "点击跳转（可选）"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram 社交�?,
+      "blocks": [
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,103 @@
+/* Featured — Signature Acquisitions，字号 px */
+
+.section-qs-featured-products .qs-featured,
+.qs-featured {
+  padding: 88px 0 !important;
+  background: #f9f9f7;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.qs-featured__header {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 32px;
+  margin-bottom: 40px !important;
+}
+
+.qs-featured__eyebrow {
+  margin: 0 0 6px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  line-height: 14px !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  color: #735a36 !important;
+}
+
+.qs-featured__title {
+  margin: 0 !important;
+  font-size: 36px !important;
+  font-weight: 300 !important;
+  line-height: 44px !important;
+  letter-spacing: -0.02em !important;
+  color: #2a2a2a !important;
+}
+
+.qs-featured__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+}
+
+.qs-featured__tab {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 16px !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  color: #444748 !important;
+  background: none !important;
+  border: 0 !important;
+  cursor: default;
+}
+
+a.qs-featured__tab {
+  cursor: pointer;
+}
+
+.qs-featured__tab--active,
+a.qs-featured__tab--active {
+  color: #2a2a2a !important;
+  text-decoration: underline !important;
+  text-underline-offset: 8px !important;
+  text-decoration-color: #735a36 !important;
+  text-decoration-thickness: 1px !important;
+}
+
+.section-qs-featured-products .qs-featured__grid,
+.qs-featured__grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 24px 20px !important;
+}
+
+.qs-featured__grid > * {
+  min-width: 0;
+}
+
+@media (max-width: 989px) {
+  .section-qs-featured-products .qs-featured__grid,
+  .qs-featured__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 549px) {
+  .qs-featured {
+    padding: 56px 0 !important;
+  }
+
+  .section-qs-featured-products .qs-featured__grid,
+  .qs-featured__grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .qs-featured__title {
+    font-size: 30px !important;
+    line-height: 38px !important;
+  }
+}

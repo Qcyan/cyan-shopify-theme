@@ -1,0 +1,299 @@
+{% comment %}
+  Sensory Realms — stitch §5 三域卡片
+{% endcomment %}
+
+<section class="qs-realms">
+  <div class="page-width">
+    <header class="qs-realms__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="qs-realms__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        <h2 class="qs-realms__title">{{ section.settings.title }}</h2>
+      {% endif %}
+      {% if section.settings.subtitle != blank %}
+        <p class="qs-realms__subtitle">{{ section.settings.subtitle }}</p>
+      {% endif %}
+    </header>
+
+    <div class="qs-realms__grid">
+      {% for block in section.blocks %}
+        <article class="qs-realms__card" {{ block.shopify_attributes }}>
+          <div class="qs-realms__media">
+            {% if block.settings.image != blank %}
+              {{
+                block.settings.image
+                | image_url: width: 1200
+                | image_tag:
+                  loading: 'lazy',
+                  sizes: '(min-width: 990px) 33vw, 100vw',
+                  widths: '400, 800, 1200',
+                  class: 'qs-realms__img',
+                  alt: block.settings.title
+              }}
+            {% elsif block.settings.fallback_image != blank %}
+              <img
+                class="qs-realms__img"
+                src="{{ block.settings.fallback_image }}"
+                alt="{{ block.settings.title | escape }}"
+                loading="lazy"
+                width="800"
+                height="1000"
+              >
+            {% else %}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'qs-realms__img' }}
+            {% endif %}
+          </div>
+          <div class="qs-realms__overlay">
+            {% if block.settings.domain != blank %}
+              <p class="qs-realms__domain">{{ block.settings.domain }}</p>
+            {% endif %}
+            {% if block.settings.title != blank %}
+              <h3 class="qs-realms__card-title">{{ block.settings.title }}</h3>
+            {% endif %}
+            {% if block.settings.text != blank %}
+              <p class="qs-realms__card-text">{{ block.settings.text }}</p>
+            {% endif %}
+            {% if block.settings.link_label != blank %}
+              <a class="qs-realms__link" href="{{ block.settings.link | default: '#' }}">
+                {{ block.settings.link_label }}
+                <span aria-hidden="true">→</span>
+              </a>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+/* Sensory Realms — 三列领域卡，px 字号 */
+
+.section-qs-realms .qs-realms,
+.qs-realms {
+  padding: 88px 0 !important;
+  background: #f9f9f7;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.qs-realms__header {
+  max-width: 40rem;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+
+.qs-realms__eyebrow {
+  margin: 0 0 8px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  line-height: 14px !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  color: #735a36 !important;
+}
+
+.qs-realms__title {
+  margin: 0 0 12px !important;
+  font-size: 36px !important;
+  font-weight: 300 !important;
+  line-height: 44px !important;
+  letter-spacing: -0.02em !important;
+  color: #2a2a2a !important;
+}
+
+.qs-realms__subtitle {
+  margin: 0 !important;
+  font-size: 14px !important;
+  line-height: 22px !important;
+  color: #444748 !important;
+}
+
+.qs-realms__grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 20px !important;
+}
+
+.qs-realms__card {
+  position: relative;
+  overflow: hidden;
+  background: #e2e3e1;
+  aspect-ratio: 3 / 4;
+}
+
+.qs-realms__media,
+.qs-realms__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.qs-realms__img {
+  transition: transform 0.5s ease;
+}
+
+.qs-realms__card:hover .qs-realms__img {
+  transform: scale(1.04);
+}
+
+.qs-realms__overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 20px;
+  background: linear-gradient(transparent, rgba(26, 28, 27, 0.78));
+  color: #fafaf8;
+}
+
+.qs-realms__domain {
+  margin: 0 0 8px !important;
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid #c8a97e;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  color: #c8a97e !important;
+}
+
+.qs-realms__card-title {
+  margin: 0 0 8px !important;
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  line-height: 24px !important;
+  letter-spacing: -0.01em !important;
+  color: #fafaf8 !important;
+}
+
+.qs-realms__card-text {
+  margin: 0 0 14px !important;
+  font-size: 12px !important;
+  line-height: 18px !important;
+  color: rgba(250, 250, 248, 0.78) !important;
+}
+
+.qs-realms__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  color: #fafaf8 !important;
+}
+
+.qs-realms__link:hover {
+  color: #c8a97e !important;
+}
+
+@media (max-width: 989px) {
+  .qs-realms__grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .qs-realms__card {
+    aspect-ratio: 4 / 3;
+  }
+
+  .qs-realms__title {
+    font-size: 30px !important;
+    line-height: 38px !important;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "感官领域",
+  "tag": "section",
+  "class": "section-qs-realms",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "眉题",
+      "default": "Spatial & Tactile Domains"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "标题",
+      "default": "Sensory Realms"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "副标题",
+      "default": "Formulations crafted for individual skin, sacred dwelling spaces, and evening ablutions."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "realm",
+      "name": "领域卡片",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "图片" },
+        {
+          "type": "text",
+          "id": "fallback_image",
+          "label": "备用图片 URL（示意）"
+        },
+        { "type": "text", "id": "domain", "label": "Domain 标签", "default": "Domain 01" },
+        { "type": "text", "id": "title", "label": "标题", "default": "Haute Parfumerie" },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "描述",
+          "default": "Extraits de Parfum concentrated at 32% pure botanical essences."
+        },
+        { "type": "text", "id": "link_label", "label": "链接文案", "default": "Discover Collection" },
+        { "type": "url", "id": "link", "label": "链接" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "感官领域",
+      "blocks": [
+        {
+          "type": "realm",
+          "settings": {
+            "fallback_image": "https://lh3.googleusercontent.com/aida-public/AB6AXuCkpdf6i6GQg6EHSOhxsZn1BHGUELjYIoTeXFJrDob3pU8iQHiwhMd4JaL54myN-n1dD0QfA-BwVmLlmAY5ZYdjZqslqrxW0oUA82ExbklsTfLIEvjU7InzqZCp1VGylEvhMQml7jqVpyDAEypQs6Y_3zn7FpEPRIWqhTeNP_bn7qaw_3ir0rSDBFU_NeKqK1C7YTgdt2vv2u7uc8_RzxfJylQp8oazknvBRS3KOPs",
+            "domain": "Domain 01",
+            "title": "Haute Parfumerie",
+            "text": "Extraits de Parfum concentrated at 32% pure botanical essences.",
+            "link_label": "Discover Collection"
+          }
+        },
+        {
+          "type": "realm",
+          "settings": {
+            "fallback_image": "https://lh3.googleusercontent.com/aida-public/AB6AXuDKJn0Q6qAGqfnC-j8pw2HzBTNDd-6L1ECU_IES5zojMwZ_bWl0gmEp00YeDxSwbPGwQYoHIVjVw-TP74j1vcBRJHcfdM5p5cz3KoCum7ycBrinLZUHTk2WhStSa5yVQnYMxoJG4dw7F1eJzZluomIMoH5Awui8ZJeZGt-D22AYqQZAVnDzAgioZFm1sP5pv61FaCpAhECVBFgH-Hkxe3QowuE5K_Qmcvp5dpbAF5Y",
+            "domain": "Domain 02",
+            "title": "Atmospheric Living",
+            "text": "Mineral incense, chiseled stone diffusers, and poured alabaster vessels.",
+            "link_label": "Discover Objects"
+          }
+        },
+        {
+          "type": "realm",
+          "settings": {
+            "fallback_image": "https://lh3.googleusercontent.com/aida-public/AB6AXuCNjkcX2_8_pKkMaxXyhtjcBH-_jX7i8frCQZ-OTsZAbt2Ie8s6qrUnnYSTB148yp9VBk8lxy-kVtgMDYn0b2RiQch_UwIhUh3mRnHvYULUMaaBNYWFBl3lmjGqFIwOfmjcZ0ejdRDyy9k8NAB-Fq4A_JDEz_n4exLsoTM6iOaXrYyASpmfSo8oJHeISAYx49F91JqtGCCAKJpY3-4opsd56mW3YwWVpnS8yRK-9zg",
+            "domain": "Domain 03",
+            "title": "Botanical Body Ritual",
+            "text": "Nourishing cold-pressed botanical oils, balms, and hand washes.",
+            "link_label": "Discover Rituals"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,12 +1,109 @@
 {
-  "generatedAt": "2026-10-29T07:07:20.143Z",
+  "generatedAt": "2026-10-30T10:30:53.416Z",
   "items": [
+    {
+      "name": "qs-cart",
+      "kind": "sections",
+      "src": "sections/cart/qs-cart/qs-cart.liquid",
+      "liquidOut": "sections/qs-cart.liquid",
+      "cssOut": "assets/section-qs-cart.css",
+      "stylesheetInjected": true
+    },
+    {
+      "name": "qs-collection",
+      "kind": "sections",
+      "src": "sections/collection/qs-collection/qs-collection.liquid",
+      "liquidOut": "sections/qs-collection.liquid",
+      "cssOut": "assets/section-qs-collection.css",
+      "stylesheetInjected": true
+    },
+    {
+      "name": "qs-footer",
+      "kind": "sections",
+      "src": "sections/layout/qs-footer/qs-footer.liquid",
+      "liquidOut": "sections/qs-footer.liquid",
+      "cssOut": "assets/section-qs-footer.css",
+      "stylesheetInjected": true
+    },
     {
       "name": "hero-banner",
       "kind": "sections",
       "src": "sections/marketing/hero-banner/hero-banner.liquid",
       "liquidOut": "sections/hero-banner.liquid",
-      "cssOut": "assets/section-hero-banner.css"
+      "cssOut": "assets/section-hero-banner.css",
+      "stylesheetInjected": true
+    },
+    {
+      "name": "qs-about",
+      "kind": "sections",
+      "src": "sections/marketing/qs-about/qs-about.liquid",
+      "liquidOut": "sections/qs-about.liquid",
+      "cssOut": "assets/section-qs-about.css",
+      "stylesheetInjected": true
+    },
+    {
+      "name": "qs-featured-products",
+      "kind": "sections",
+      "src": "sections/marketing/qs-featured-products/qs-featured-products.liquid",
+      "liquidOut": "sections/qs-featured-products.liquid",
+      "cssOut": "assets/section-qs-featured-products.css",
+      "stylesheetInjected": true
+    },
+    {
+      "name": "qs-instagram",
+      "kind": "sections",
+      "src": "sections/marketing/qs-instagram/qs-instagram.liquid",
+      "liquidOut": "sections/qs-instagram.liquid",
+      "cssOut": "assets/section-qs-instagram.css",
+      "stylesheetInjected": true
+    },
+    {
+      "name": "qs-newsletter",
+      "kind": "sections",
+      "src": "sections/marketing/qs-newsletter/qs-newsletter.liquid",
+      "liquidOut": "sections/qs-newsletter.liquid",
+      "cssOut": "assets/section-qs-newsletter.css",
+      "stylesheetInjected": true
+    },
+    {
+      "name": "qs-press",
+      "kind": "sections",
+      "src": "sections/marketing/qs-press/qs-press.liquid",
+      "liquidOut": "sections/qs-press.liquid",
+      "cssOut": "assets/section-qs-press.css",
+      "stylesheetInjected": true
+    },
+    {
+      "name": "qs-realms",
+      "kind": "sections",
+      "src": "sections/marketing/qs-realms/qs-realms.liquid",
+      "liquidOut": "sections/qs-realms.liquid",
+      "cssOut": "assets/section-qs-realms.css",
+      "stylesheetInjected": true
+    },
+    {
+      "name": "qs-usps",
+      "kind": "sections",
+      "src": "sections/marketing/qs-usps/qs-usps.liquid",
+      "liquidOut": "sections/qs-usps.liquid",
+      "cssOut": "assets/section-qs-usps.css",
+      "stylesheetInjected": true
+    },
+    {
+      "name": "qs-product",
+      "kind": "sections",
+      "src": "sections/product/qs-product/qs-product.liquid",
+      "liquidOut": "sections/qs-product.liquid",
+      "cssOut": "assets/section-qs-product.css",
+      "stylesheetInjected": true
+    },
+    {
+      "name": "qs-product-card",
+      "kind": "snippets",
+      "src": "snippets/product/qs-product-card/qs-product-card.liquid",
+      "liquidOut": "snippets/qs-product-card.liquid",
+      "cssOut": "assets/snippet-qs-product-card.css",
+      "stylesheetInjected": true
     }
   ]
 }

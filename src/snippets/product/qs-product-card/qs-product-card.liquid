@@ -1,0 +1,150 @@
+{% comment %}
+  Product card — 对齐 stitch Signature Acquisitions / Permanent Collection
+  真实商品: {% render 'qs-product-card', product: product, badge: '...' %}
+  示意: {% render 'qs-product-card', demo: true, title: '...', ... %}
+  variant: 'collection' 启用系列页布局（notes + Quick Add 价）
+{% endcomment %}
+
+{% liquid
+  assign is_demo = demo | default: false
+  assign card_variant = variant | default: 'default'
+  assign is_collection = false
+  if card_variant == 'collection'
+    assign is_collection = true
+  endif
+
+  if is_demo
+    assign card_title = title
+    assign card_desc = description
+    assign card_price = price
+    assign card_badge = badge
+    assign card_rating = rating_count
+    assign card_score = rating_score
+    assign card_notes = notes
+    assign card_href = '#'
+  elsif product != blank
+    assign card_title = product.title
+    assign card_desc = product.description | strip_html | truncate: 80
+    assign card_price = product.price | money
+    assign card_badge = badge
+    assign card_rating = rating_count
+    assign card_score = rating_score
+    assign card_notes = notes
+    assign card_href = product.url
+  endif
+%}
+
+{% if is_demo or product != blank %}
+  <article class="qs-product-card{% if is_collection %} qs-product-card--collection{% endif %}">
+    <a class="qs-product-card__media" href="{{ card_href }}">
+      {% if card_badge != blank %}
+        <span class="qs-product-card__badge">{{ card_badge }}</span>
+      {% endif %}
+
+      {% if is_demo and image_url != blank %}
+        <img
+          class="qs-product-card__image"
+          src="{{ image_url }}"
+          alt="{{ card_title | escape }}"
+          loading="lazy"
+          width="600"
+          height="800"
+        >
+      {% elsif product.featured_media %}
+        {{
+          product.featured_media
+          | image_url: width: 900
+          | image_tag:
+            loading: 'lazy',
+            sizes: '(min-width: 990px) 25vw, (min-width: 750px) 50vw, 50vw',
+            widths: '360, 540, 720, 900',
+            class: 'qs-product-card__image',
+            alt: card_title
+        }}
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'qs-product-card__placeholder' }}
+      {% endif %}
+
+      <div class="qs-product-card__quick">
+        {% if is_collection %}
+          <span class="qs-product-card__quick-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+            Quick Add — {{ card_price }}
+          </span>
+        {% else %}
+          <span>Quick Acquire</span>
+          <span class="qs-product-card__quick-btn" aria-hidden="true">+</span>
+        {% endif %}
+      </div>
+    </a>
+
+    <div class="qs-product-card__info">
+      {% if is_collection %}
+        <div class="qs-product-card__toprow">
+          {% if card_notes != blank %}
+            <span class="qs-product-card__notes">{{ card_notes }}</span>
+          {% else %}
+            <span class="qs-product-card__notes"></span>
+          {% endif %}
+          {% if card_score != blank or card_rating != blank %}
+            <div class="qs-product-card__rating qs-product-card__rating--inline">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+              </svg>
+              {% if card_score != blank %}
+                <span class="qs-product-card__score">{{ card_score }}</span>
+              {% endif %}
+              {% if card_rating != blank %}
+                <span class="qs-product-card__rating-count">({{ card_rating }})</span>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      {% elsif card_rating != blank %}
+        <div class="qs-product-card__rating" aria-label="Rated 5 out of 5">
+          <span class="qs-product-card__stars" aria-hidden="true">★★★★★</span>
+          <span class="qs-product-card__rating-count">({{ card_rating }})</span>
+        </div>
+      {% endif %}
+
+      <h3 class="qs-product-card__title">
+        <a href="{{ card_href }}">{{ card_title }}</a>
+      </h3>
+
+      {% if card_desc != blank %}
+        <p class="qs-product-card__meta">{{ card_desc }}</p>
+      {% endif %}
+
+      <div class="qs-product-card__footer">
+        {% if meta_label != blank %}
+          <span class="qs-product-card__handcrafted">{{ meta_label }}</span>
+        {% elsif variant_a != blank %}
+          <div class="qs-product-card__variants">
+            <span class="qs-product-card__variant{% if variant_active == 'a' %} is-active{% endif %}">
+              {{- variant_a -}}
+            </span>
+            {% if variant_b != blank %}
+              <span class="qs-product-card__variant{% if variant_active == 'b' %} is-active{% endif %}">
+                {{- variant_b -}}
+              </span>
+            {% endif %}
+          </div>
+        {% elsif product != blank and product.variants.size > 1 %}
+          <div class="qs-product-card__variants">
+            {% for v in product.variants limit: 2 %}
+              <span class="qs-product-card__variant{% if forloop.first %} is-active{% endif %}">
+                {{- v.title -}}
+              </span>
+            {% endfor %}
+          </div>
+        {% else %}
+          <span></span>
+        {% endif %}
+
+        <span class="qs-product-card__price">{{ card_price }}</span>
+      </div>
+    </div>
+  </article>
+{% endif %}

@@ -1,0 +1,403 @@
+{% comment %}
+  Cart — 对齐 stitch/desktop-cart.html（抽屉视觉做成购物车页）
+{% endcomment %}
+
+{% liquid
+  assign item_count = cart.item_count
+  assign is_demo = false
+  if item_count == 0
+    assign is_demo = true
+  endif
+  assign free_ship_threshold = section.settings.free_ship_cents | default: 15000
+  assign progress = 100
+  if is_demo == false and cart.total_price < free_ship_threshold and free_ship_threshold > 0
+    assign progress = cart.total_price | times: 100 | divided_by: free_ship_threshold
+  endif
+  assign display_count = item_count
+  if is_demo
+    assign display_count = 2
+    assign progress = 100
+  endif
+%}
+
+<section class="qs-cart" id="qs-cart-{{ section.id }}">
+  <div class="page-width">
+    <div class="qs-cart__shell">
+      <div class="qs-cart__header">
+        <div class="qs-cart__title-row">
+          <div class="qs-cart__title-group">
+            <h1 class="qs-cart__title">{{ section.settings.title | default: 'Your Selections' }}</h1>
+            <span class="qs-cart__count">({{ display_count }} Items)</span>
+          </div>
+          <a class="qs-cart__close" href="{{ routes.root_url }}" aria-label="Close cart">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="qs-cart__ship">
+          <div class="qs-cart__ship-row">
+            <span class="qs-cart__ship-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2l1.8 5.5L19 9.3l-5.2 1.8L12 17l-1.8-5.9L5 9.3l5.2-1.8L12 2z"/>
+              </svg>
+              {% if progress >= 100 %}
+                Complimentary Worldwide Courier Unlocked
+              {% else %}
+                {{ section.settings.ship_locked_label | default: 'Complimentary Worldwide Courier' }}
+              {% endif %}
+            </span>
+            <span>{{ progress }}%</span>
+          </div>
+          <div class="qs-cart__ship-track" aria-hidden="true">
+            <span class="qs-cart__ship-fill" style="width: {{ progress }}%"></span>
+          </div>
+          <p class="qs-cart__ship-text">
+            {% if progress >= 100 %}
+              {{ section.settings.ship_unlocked_text }}
+            {% else %}
+              {{ section.settings.ship_locked_text }}
+            {% endif %}
+          </p>
+        </div>
+      </div>
+
+      <form class="qs-cart__body" action="{{ routes.cart_url }}" method="post" id="cart">
+        <div class="qs-cart__items">
+          {% if item_count > 0 %}
+            {% for item in cart.items %}
+              <div class="qs-cart__item">
+                <a class="qs-cart__item-media" href="{{ item.url }}">
+                  {% if item.image %}
+                    {{
+                      item.image
+                      | image_url: width: 200
+                      | image_tag: loading: 'lazy', alt: item.product.title
+                    }}
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  {% endif %}
+                </a>
+                <div class="qs-cart__item-main">
+                  <div class="qs-cart__item-top">
+                    <div>
+                      {% if item.product.type != blank %}
+                        <span class="qs-cart__item-type">{{ item.product.type }}</span>
+                      {% endif %}
+                      <h2 class="qs-cart__item-title">
+                        <a href="{{ item.url }}">{{ item.product.title }}{% if item.variant.title != 'Default Title' %} ({{ item.variant.title }}){% endif %}</a>
+                      </h2>
+                      {% for property in item.properties %}
+                        {% unless property.last == blank %}
+                          <span class="qs-cart__item-prop">{{ property.first }}: '{{ property.last }}'</span>
+                        {% endunless %}
+                      {% endfor %}
+                    </div>
+                    <a
+                      class="qs-cart__item-remove"
+                      href="{{ item.url_to_remove }}"
+                      aria-label="Remove {{ item.product.title | escape }}"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="qs-cart__item-foot">
+                    <div class="qs-cart__qty">
+                      <a
+                        class="qs-cart__qty-btn"
+                        href="{{ routes.cart_change_url }}?line={{ forloop.index }}&amp;quantity={{ item.quantity | minus: 1 }}"
+                        aria-label="Decrease quantity"
+                      >
+                        −
+                      </a>
+                      <span class="qs-cart__qty-value">{{ item.quantity }}</span>
+                      <a
+                        class="qs-cart__qty-btn"
+                        href="{{ routes.cart_change_url }}?line={{ forloop.index }}&amp;quantity={{ item.quantity | plus: 1 }}"
+                        aria-label="Increase quantity"
+                      >
+                        +
+                      </a>
+                    </div>
+                    <span class="qs-cart__item-price">{{ item.final_line_price | money }}</span>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            {% comment %} 空车时用设计稿示意，便于对照检查 {% endcomment %}
+            <div class="qs-cart__item">
+              <div class="qs-cart__item-media">
+                <img
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyc4QzrZfhakgNtYTLuUEfKM43Ng6n0fh7naDW42q9X_k1svGtcHxZUgc-hau5OCVgrHeG661PggjWpF-CmDn15yhk3xQrEYngIwLD-9KnoEJo6EIfFLuJUZSIReUN4jxeo1-Uolpw0D5cCChXMcofLgqIylgI--M3s9GaJ9yzWdjk2z9jlqEEr2b9oR30QNM_eKOxlCkdVIdiFbAIhtKxnBFzGrTxDLP7Xw36fWc"
+                  alt=""
+                  width="160"
+                  height="192"
+                  loading="lazy"
+                >
+              </div>
+              <div class="qs-cart__item-main">
+                <div class="qs-cart__item-top">
+                  <div>
+                    <span class="qs-cart__item-type">Extrait de Parfum</span>
+                    <h2 class="qs-cart__item-title">No. 07 Santal Nectar (50ml)</h2>
+                    <span class="qs-cart__item-prop">Engraving: 'V.M.'</span>
+                  </div>
+                  <span class="qs-cart__item-remove" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
+                  </span>
+                </div>
+                <div class="qs-cart__item-foot">
+                  <div class="qs-cart__qty">
+                    <button type="button" disabled>−</button>
+                    <span class="qs-cart__qty-value">1</span>
+                    <button type="button" disabled>+</button>
+                  </div>
+                  <span class="qs-cart__item-price">$185.00</span>
+                </div>
+              </div>
+            </div>
+            <div class="qs-cart__item">
+              <div class="qs-cart__item-media">
+                <img
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcjZukIVNUADOlR_lPvqIRn1xZxsG7al214FgFxv_9iNcjqn4f8e1mat17S4jF30ODpogd1JKlimeYsL_aE2slx7blkFv2jk1o6lt1D91If4bYUv9l2w0T-2E-bOBBTxdN_9KUGxTmIFBSH9JV2_fzFWWvLh_o1cLS_Xw_lwWlXz4S9Ix6qnLQRYPOkfb9Tq07rg0cJTqh0kC1hlofsCcWkGyvD4cNZw0FX3Y09Zs"
+                  alt=""
+                  width="160"
+                  height="192"
+                  loading="lazy"
+                >
+              </div>
+              <div class="qs-cart__item-main">
+                <div class="qs-cart__item-top">
+                  <div>
+                    <span class="qs-cart__item-type">Living Artefact</span>
+                    <h2 class="qs-cart__item-title">Cast Bronze Incense Dish</h2>
+                    <p class="qs-cart__item-sub">Solid Patina Finish · Kyoto</p>
+                  </div>
+                  <span class="qs-cart__item-remove" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
+                  </span>
+                </div>
+                <div class="qs-cart__item-foot">
+                  <div class="qs-cart__qty">
+                    <button type="button" disabled>−</button>
+                    <span class="qs-cart__qty-value">1</span>
+                    <button type="button" disabled>+</button>
+                  </div>
+                  <span class="qs-cart__item-price">$145.00</span>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="qs-cart__upsell-block">
+          <div class="qs-cart__upsells-head">
+            <h2 class="qs-cart__upsells-title">{{ section.settings.upsell_title | default: 'Harmonious Pairings' }}</h2>
+            <span class="qs-cart__upsells-tag">Complimentary Samples</span>
+          </div>
+          <div class="qs-cart__upsells">
+            <div class="qs-cart__upsell">
+              <div class="qs-cart__upsell-media">
+                <img
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrqTkBFf9axieNxWlnY1bvF5RMsdMOnCSJFQK6-3kR8JOEUsBav-UMcX-ABAKCJQ5JSOk3oMsV0McZnuIhiDbOFpQIzhM8sD8seZmSYRTIePRwMJNJVC1ZwI81E4cfT0m7_BIZoxrIVLerIOesxv-jZp-xoclALV9BTVSAHguMEXmkwKX7EWbk0ld04QQ6XBb7sk1e92bumyB3m47klDA5LwCrAQOEEzeP3KtpRVE"
+                  alt=""
+                  width="320"
+                  height="320"
+                  loading="lazy"
+                >
+              </div>
+              <p class="qs-cart__upsell-name">Discovery Vial Set</p>
+              <p class="qs-cart__upsell-meta">5 × 2ml Extracts</p>
+              <div class="qs-cart__upsell-foot">
+                <span class="qs-cart__upsell-price">$45.00</span>
+                <span class="qs-cart__upsell-add">+ Add</span>
+              </div>
+            </div>
+            <div class="qs-cart__upsell">
+              <div class="qs-cart__upsell-media">
+                <img
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDS4Qm5PxKGe0g6YHmswobRNFQ_OSrULEQLo9MM6ga0GPFliRVXJNGrPBEDhnDKkfdfRs1l0Sv5nPmpqm_Gi7KEZhCJmZf_k2zcWY02B7ZJpPzLGRxG9Bmo__y0kTc4CICOajr-59-D5hAF2qo99ald-f7Ehi69YOOrH5HZ86dJyXWuxWShhP6p0JN1VDOhIbHSt8a6r4oZgpYXhHB1L-IkEUdOJIUtynMVTygVaAg"
+                  alt=""
+                  width="320"
+                  height="320"
+                  loading="lazy"
+                >
+              </div>
+              <p class="qs-cart__upsell-name">Linen &amp; Silk Pouch</p>
+              <p class="qs-cart__upsell-meta">Bespoke Travel Shield</p>
+              <div class="qs-cart__upsell-foot">
+                <span class="qs-cart__upsell-price">$28.00</span>
+                <span class="qs-cart__upsell-add">+ Add</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="qs-cart__accords">
+          <details class="qs-cart__accord">
+            <summary>
+              <span class="qs-cart__accord-lead">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 000-1.42l-2.34-2.34a1.003 1.003 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
+                </svg>
+                Complimentary Calligraphy Note
+              </span>
+              <span aria-hidden="true">+</span>
+            </summary>
+            <div class="qs-cart__accord-body">
+              Inscribed by our calligrapher onto pressed cotton parchment. Hand-penned in Kyoto.
+            </div>
+          </details>
+
+          <details class="qs-cart__accord">
+            <summary>
+              <span class="qs-cart__accord-lead">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58s1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41s-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/>
+                </svg>
+                Salon Atelier Privilege Code
+              </span>
+              <span aria-hidden="true">+</span>
+            </summary>
+            <div class="qs-cart__accord-body">
+              <div class="qs-cart__discount">
+                <input type="text" name="discount" placeholder="Apply" aria-label="Discount code" value="ATELIER10">
+                <button type="button">Apply</button>
+              </div>
+              <div class="qs-cart__discount-applied">
+                Code ATELIER10 applied: 10% Salon Courtesy
+                <strong style="float:right">− $33.00</strong>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <div class="qs-cart__summary">
+          <div class="qs-cart__summary-row">
+            <span>Subtotal</span>
+            <span>
+              {%- if item_count > 0 -%}
+                {{ cart.items_subtotal_price | money }}
+              {%- else -%}
+                $330.00
+              {%- endif -%}
+            </span>
+          </div>
+          <div class="qs-cart__summary-row">
+            <span>Privilege Courtesy (ATELIER10)</span>
+            <span>− $33.00</span>
+          </div>
+          <div class="qs-cart__summary-row is-accent">
+            <span>Bespoke Monogramming</span>
+            <span>Complimentary</span>
+          </div>
+          <div class="qs-cart__summary-row is-accent">
+            <span>Express Courier Service</span>
+            <span>Complimentary ($0.00)</span>
+          </div>
+          <div class="qs-cart__summary-row">
+            <span>Import Duties &amp; VAT</span>
+            <span>Calculated at final step</span>
+          </div>
+          <div class="qs-cart__summary-row is-total">
+            <span>Estimated Total</span>
+            <span>
+              {%- if item_count > 0 -%}
+                {{ cart.total_price | money_with_currency }}
+              {%- else -%}
+                $297.00 USD
+              {%- endif -%}
+            </span>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          name="checkout"
+          class="qs-cart__checkout"
+          {% if item_count == 0 %}
+            disabled
+          {% endif %}
+        >
+          <span>Proceed to Checkout</span>
+          <span>
+            {%- if item_count > 0 -%}
+              {{ cart.total_price | money }}
+            {%- else -%}
+              $297.00
+            {%- endif -%}
+            →
+          </span>
+        </button>
+
+        <div class="qs-cart__express" aria-hidden="true">
+          <span class="qs-cart__express-btn qs-cart__express-btn--shop">Pay with shop<span style="font-weight:300">Pay</span></span>
+          <span class="qs-cart__express-btn qs-cart__express-btn--pay">Pay with PayPal</span>
+        </div>
+
+        <div class="qs-cart__trust">
+          <span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+            256-Bit SSL Secured
+          </span>
+          <span>30-Day Returns</span>
+          <span>Ethical Formulations</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "购物车 Your Selections",
+  "tag": "section",
+  "class": "section-qs-cart",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "标题",
+      "default": "Your Selections"
+    },
+    {
+      "type": "number",
+      "id": "free_ship_cents",
+      "label": "免运费门槛（分）",
+      "default": 15000
+    },
+    {
+      "type": "text",
+      "id": "ship_locked_label",
+      "label": "运费条未达标标题",
+      "default": "Complimentary Worldwide Courier"
+    },
+    {
+      "type": "textarea",
+      "id": "ship_locked_text",
+      "label": "运费条未达标说明",
+      "default": "Add more to unlock Atelier signature black-box & raw silk wrapping."
+    },
+    {
+      "type": "textarea",
+      "id": "ship_unlocked_text",
+      "label": "运费条已解锁说明",
+      "default": "Your reserve qualifies for Atelier signature black-box & raw silk wrapping."
+    },
+    {
+      "type": "text",
+      "id": "upsell_title",
+      "label": "加购区标题",
+      "default": "Harmonious Pairings"
+    }
+  ]
+}
+{% endschema %}

@@ -6,6 +6,9 @@ Thumbs.db
 .env
 .env.local
 
+# 含 Stitch 等 MCP API Key，勿提交
+.cursor/mcp.json
+
 # Vite 内部缓存（构建产物 theme-*.js/css 与 vite-tag 仍入库，方便直接 theme push）
 theme/assets/.vite/
 

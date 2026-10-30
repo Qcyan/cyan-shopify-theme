@@ -1,0 +1,454 @@
+{% comment %}
+  Product card — 对齐 stitch Signature Acquisitions / Permanent Collection
+  真实商品: {% render 'qs-product-card', product: product, badge: '...' %}
+  示意: {% render 'qs-product-card', demo: true, title: '...', ... %}
+  variant: 'collection' 启用系列页布局（notes + Quick Add 价）
+{% endcomment %}
+
+{% liquid
+  assign is_demo = demo | default: false
+  assign card_variant = variant | default: 'default'
+  assign is_collection = false
+  if card_variant == 'collection'
+    assign is_collection = true
+  endif
+
+  if is_demo
+    assign card_title = title
+    assign card_desc = description
+    assign card_price = price
+    assign card_badge = badge
+    assign card_rating = rating_count
+    assign card_score = rating_score
+    assign card_notes = notes
+    assign card_href = '#'
+  elsif product != blank
+    assign card_title = product.title
+    assign card_desc = product.description | strip_html | truncate: 80
+    assign card_price = product.price | money
+    assign card_badge = badge
+    assign card_rating = rating_count
+    assign card_score = rating_score
+    assign card_notes = notes
+    assign card_href = product.url
+  endif
+%}
+
+{% if is_demo or product != blank %}
+  <article class="qs-product-card{% if is_collection %} qs-product-card--collection{% endif %}">
+    <a class="qs-product-card__media" href="{{ card_href }}">
+      {% if card_badge != blank %}
+        <span class="qs-product-card__badge">{{ card_badge }}</span>
+      {% endif %}
+
+      {% if is_demo and image_url != blank %}
+        <img
+          class="qs-product-card__image"
+          src="{{ image_url }}"
+          alt="{{ card_title | escape }}"
+          loading="lazy"
+          width="600"
+          height="800"
+        >
+      {% elsif product.featured_media %}
+        {{
+          product.featured_media
+          | image_url: width: 900
+          | image_tag:
+            loading: 'lazy',
+            sizes: '(min-width: 990px) 25vw, (min-width: 750px) 50vw, 50vw',
+            widths: '360, 540, 720, 900',
+            class: 'qs-product-card__image',
+            alt: card_title
+        }}
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'qs-product-card__placeholder' }}
+      {% endif %}
+
+      <div class="qs-product-card__quick">
+        {% if is_collection %}
+          <span class="qs-product-card__quick-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+            Quick Add — {{ card_price }}
+          </span>
+        {% else %}
+          <span>Quick Acquire</span>
+          <span class="qs-product-card__quick-btn" aria-hidden="true">+</span>
+        {% endif %}
+      </div>
+    </a>
+
+    <div class="qs-product-card__info">
+      {% if is_collection %}
+        <div class="qs-product-card__toprow">
+          {% if card_notes != blank %}
+            <span class="qs-product-card__notes">{{ card_notes }}</span>
+          {% else %}
+            <span class="qs-product-card__notes"></span>
+          {% endif %}
+          {% if card_score != blank or card_rating != blank %}
+            <div class="qs-product-card__rating qs-product-card__rating--inline">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+              </svg>
+              {% if card_score != blank %}
+                <span class="qs-product-card__score">{{ card_score }}</span>
+              {% endif %}
+              {% if card_rating != blank %}
+                <span class="qs-product-card__rating-count">({{ card_rating }})</span>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      {% elsif card_rating != blank %}
+        <div class="qs-product-card__rating" aria-label="Rated 5 out of 5">
+          <span class="qs-product-card__stars" aria-hidden="true">★★★★★</span>
+          <span class="qs-product-card__rating-count">({{ card_rating }})</span>
+        </div>
+      {% endif %}
+
+      <h3 class="qs-product-card__title">
+        <a href="{{ card_href }}">{{ card_title }}</a>
+      </h3>
+
+      {% if card_desc != blank %}
+        <p class="qs-product-card__meta">{{ card_desc }}</p>
+      {% endif %}
+
+      <div class="qs-product-card__footer">
+        {% if meta_label != blank %}
+          <span class="qs-product-card__handcrafted">{{ meta_label }}</span>
+        {% elsif variant_a != blank %}
+          <div class="qs-product-card__variants">
+            <span class="qs-product-card__variant{% if variant_active == 'a' %} is-active{% endif %}">
+              {{- variant_a -}}
+            </span>
+            {% if variant_b != blank %}
+              <span class="qs-product-card__variant{% if variant_active == 'b' %} is-active{% endif %}">
+                {{- variant_b -}}
+              </span>
+            {% endif %}
+          </div>
+        {% elsif product != blank and product.variants.size > 1 %}
+          <div class="qs-product-card__variants">
+            {% for v in product.variants limit: 2 %}
+              <span class="qs-product-card__variant{% if forloop.first %} is-active{% endif %}">
+                {{- v.title -}}
+              </span>
+            {% endfor %}
+          </div>
+        {% else %}
+          <span></span>
+        {% endif %}
+
+        <span class="qs-product-card__price">{{ card_price }}</span>
+      </div>
+    </div>
+  </article>
+{% endif %}
+
+{% stylesheet %}
+/* Product card — stitch Signature Acquisitions，字号 px */
+
+.qs-product-card {
+  display: flex;
+  flex-direction: column;
+  background: #f4f4f2;
+  padding: 12px;
+  font-family: 'Inter', system-ui, sans-serif;
+  transition: box-shadow 0.25s ease;
+}
+
+.qs-product-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.qs-product-card__media {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  margin-bottom: 16px;
+  background: #e2e3e1;
+  aspect-ratio: 3 / 4;
+  text-decoration: none;
+}
+
+.qs-product-card__badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  padding: 4px 8px;
+  background: rgba(249, 249, 247, 0.92);
+  backdrop-filter: blur(6px);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #735a36;
+}
+
+.qs-product-card__image,
+.qs-product-card__placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.qs-product-card:hover .qs-product-card__image {
+  transform: scale(1.04);
+}
+
+.qs-product-card__quick {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: rgba(249, 249, 247, 0.95);
+  backdrop-filter: blur(6px);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #2a2a2a;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.qs-product-card:hover .qs-product-card__quick {
+  transform: translateY(0);
+}
+
+.qs-product-card__quick-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #2a2a2a;
+  color: #fafaf8;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.qs-product-card__info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.qs-product-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.qs-product-card__stars {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #735a36;
+  line-height: 1;
+}
+
+.qs-product-card__rating-count {
+  font-size: 12px;
+  line-height: 18px;
+  color: #747878;
+}
+
+.qs-product-card__title {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+  color: #2a2a2a;
+}
+
+.qs-product-card__title a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+.qs-product-card__meta {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 18px;
+  color: #444748;
+}
+
+.qs-product-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.qs-product-card__price {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: #2a2a2a;
+}
+
+.qs-product-card__handcrafted {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #747878;
+}
+
+.qs-product-card__variants {
+  display: flex;
+  gap: 4px;
+}
+
+.qs-product-card__variant {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 2px 8px;
+  background: #f9f9f7;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #444748;
+}
+
+.qs-product-card__variant.is-active {
+  background: #2a2a2a;
+  color: #fafaf8;
+}
+
+/* Collection page card — stitch Permanent Collection
+   整卡白底（surface-container-lowest），与页面 #fafaf8 区分 */
+.qs-product-card--collection {
+  background: #ffffff;
+  padding: 0;
+  overflow: hidden;
+}
+
+.qs-product-card--collection .qs-product-card__media {
+  margin-bottom: 0;
+  aspect-ratio: 4 / 5;
+  background: #eeeeec;
+}
+
+.qs-product-card--collection:hover .qs-product-card__image {
+  transform: none;
+  opacity: 0.92;
+}
+
+.qs-product-card--collection .qs-product-card__badge {
+  background: rgba(232, 222, 200, 0.95);
+  color: #4a3a22;
+}
+
+.qs-product-card--collection .qs-product-card__quick {
+  justify-content: center;
+  padding: 12px 14px;
+  background: #2a2a2a;
+  color: #fafaf8;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+
+.qs-product-card--collection .qs-product-card__quick-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qs-product-card--collection .qs-product-card__info {
+  background: #ffffff;
+  padding: 20px 16px 16px;
+  gap: 6px;
+}
+
+.qs-product-card__toprow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.qs-product-card__notes {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #747878;
+  line-height: 14px;
+}
+
+.qs-product-card__rating--inline {
+  margin-bottom: 0;
+  flex-shrink: 0;
+  color: #735a36;
+  gap: 4px;
+}
+
+.qs-product-card__score {
+  font-size: 12px;
+  font-weight: 500;
+  color: #2a2a2a;
+  line-height: 1;
+}
+
+.qs-product-card--collection .qs-product-card__title {
+  font-size: 20px;
+  line-height: 26px;
+  transition: color 0.2s ease;
+}
+
+.qs-product-card--collection:hover .qs-product-card__title {
+  color: #735a36;
+}
+
+.qs-product-card--collection .qs-product-card__meta {
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qs-product-card--collection .qs-product-card__footer {
+  padding-top: 8px;
+}
+
+.qs-product-card--collection .qs-product-card__variant {
+  background: #eeeeec;
+  color: #2a2a2a;
+}
+
+.qs-product-card--collection .qs-product-card__variant.is-active {
+  background: #e2e3e1;
+  color: #2a2a2a;
+}
+
+.qs-product-card--collection .qs-product-card__variant:not(.is-active) {
+  background: #f4f4f2;
+  color: #747878;
+}
+{% endstylesheet %}
+

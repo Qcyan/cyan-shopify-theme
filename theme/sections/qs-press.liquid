@@ -1,0 +1,307 @@
+{% comment %}
+  Press & Living Archive — stitch §6
+{% endcomment %}
+
+<section class="qs-press">
+  <div class="page-width">
+    <div class="qs-press__top">
+      <div class="qs-press__quote-wrap">
+        {% if section.settings.eyebrow != blank %}
+          <p class="qs-press__eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+        {% if section.settings.quote != blank %}
+          <blockquote class="qs-press__quote">{{ section.settings.quote }}</blockquote>
+        {% endif %}
+        {% if section.settings.attribution != blank %}
+          <p class="qs-press__attr">{{ section.settings.attribution }}</p>
+        {% endif %}
+      </div>
+
+      {% if section.blocks.size > 0 %}
+        <ul class="qs-press__logos">
+          {% for block in section.blocks %}
+            {% if block.type == 'logo' %}
+              <li class="qs-press__logo" {{ block.shopify_attributes }}>{{ block.settings.label }}</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="qs-press__archive">
+      <div class="qs-press__archive-head">
+        <div>
+          {% if section.settings.archive_title != blank %}
+            <h2 class="qs-press__archive-title">{{ section.settings.archive_title }}</h2>
+          {% endif %}
+          {% if section.settings.archive_text != blank %}
+            <p class="qs-press__archive-text">{{ section.settings.archive_text }}</p>
+          {% endif %}
+        </div>
+        {% if section.settings.archive_handle != blank %}
+          <a class="qs-press__handle" href="{{ section.settings.archive_link | default: '#' }}">
+            {{ section.settings.archive_handle }}
+            {% if section.settings.archive_cta != blank %}
+              <span>{{ section.settings.archive_cta }}</span>
+            {% endif %}
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="qs-press__gallery">
+        {% for block in section.blocks %}
+          {% if block.type == 'image' %}
+            <figure class="qs-press__shot" {{ block.shopify_attributes }}>
+              {% if block.settings.image != blank %}
+                {{
+                  block.settings.image
+                  | image_url: width: 900
+                  | image_tag: loading: 'lazy', widths: '400, 700, 900', class: 'qs-press__shot-img', alt: section.settings.archive_title
+                }}
+              {% elsif block.settings.fallback_image != blank %}
+                <img
+                  class="qs-press__shot-img"
+                  src="{{ block.settings.fallback_image }}"
+                  alt=""
+                  loading="lazy"
+                  width="600"
+                  height="750"
+                >
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'qs-press__shot-img' }}
+              {% endif %}
+            </figure>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+/* Press & Living Archive — px */
+
+.section-qs-press .qs-press,
+.qs-press {
+  padding: 88px 0 !important;
+  background: #f4f4f2;
+  font-family: 'Inter', system-ui, sans-serif;
+  border-top: 1px solid #eae6df;
+}
+
+.qs-press__top {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 40px 48px;
+  align-items: end;
+  margin-bottom: 64px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid #eae6df;
+}
+
+.qs-press__eyebrow {
+  margin: 0 0 12px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  color: #735a36 !important;
+}
+
+.qs-press__quote {
+  margin: 0 0 16px !important;
+  max-width: 36rem;
+  font-size: 26px !important;
+  font-weight: 300 !important;
+  line-height: 34px !important;
+  letter-spacing: -0.015em !important;
+  color: #2a2a2a !important;
+}
+
+.qs-press__attr {
+  margin: 0 !important;
+  font-size: 12px !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: #747878 !important;
+}
+
+.qs-press__logos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.qs-press__logo {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: #2a2a2a !important;
+  opacity: 0.72;
+}
+
+.qs-press__archive-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-bottom: 28px;
+}
+
+.qs-press__archive-title {
+  margin: 0 0 6px !important;
+  font-size: 36px !important;
+  font-weight: 300 !important;
+  line-height: 44px !important;
+  letter-spacing: -0.02em !important;
+  color: #2a2a2a !important;
+}
+
+.qs-press__archive-text {
+  margin: 0 !important;
+  font-size: 14px !important;
+  line-height: 22px !important;
+  color: #444748 !important;
+}
+
+.qs-press__handle {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  color: #2a2a2a !important;
+}
+
+.qs-press__handle span {
+  color: #735a36;
+}
+
+.qs-press__gallery {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+.qs-press__shot {
+  margin: 0;
+  overflow: hidden;
+  background: #e2e3e1;
+  aspect-ratio: 3 / 4;
+}
+
+.qs-press__shot-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.qs-press__shot:hover .qs-press__shot-img {
+  transform: scale(1.04);
+}
+
+@media (max-width: 989px) {
+  .qs-press__top {
+    grid-template-columns: 1fr;
+  }
+
+  .qs-press__gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .qs-press__quote,
+  .qs-press__archive-title {
+    font-size: 30px !important;
+    line-height: 38px !important;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "媒体与档案",
+  "tag": "section",
+  "class": "section-qs-press",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "眉题", "default": "Critical Acclaim" },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "引用",
+      "default": "Atelier Maison reclaims perfume as an architectural art form, shunning synthetic loudness for unforgettable tactile intimacy."
+    },
+    { "type": "text", "id": "attribution", "label": "出处", "default": "— Vogue France" },
+    { "type": "text", "id": "archive_title", "label": "档案标题", "default": "The Living Archive" },
+    {
+      "type": "textarea",
+      "id": "archive_text",
+      "label": "档案说明",
+      "default": "Client dwellings and private sanctuaries."
+    },
+    { "type": "text", "id": "archive_handle", "label": "社交账号", "default": "@atelier.maison" },
+    { "type": "text", "id": "archive_cta", "label": "档案 CTA", "default": "Join Gallery →" },
+    { "type": "url", "id": "archive_link", "label": "档案链接" }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "媒体 Logo 文案",
+      "settings": [{ "type": "text", "id": "label", "label": "名称", "default": "WALLPAPER*" }]
+    },
+    {
+      "type": "image",
+      "name": "档案图片",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "图片" },
+        { "type": "text", "id": "fallback_image", "label": "备用 URL" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "媒体与档案",
+      "blocks": [
+        { "type": "logo", "settings": { "label": "WALLPAPER*" } },
+        { "type": "logo", "settings": { "label": "ARCHITECTURAL DIGEST" } },
+        { "type": "logo", "settings": { "label": "MONOCLE" } },
+        { "type": "logo", "settings": { "label": "THE NEW YORK TIMES" } },
+        {
+          "type": "image",
+          "settings": {
+            "fallback_image": "https://lh3.googleusercontent.com/aida-public/AB6AXuBtXfzTboRRsghN6ZMZzrTJRSfNt5elCibspbxWCH-2tRTr4X_fGmWhIBnSgysdJQQq-ij1UAGSY-JkfugahIyzT3vsWFf2RXk9PUQZfk8SXmWCTZD1_Awy6QWJs6t4ZREHnMcoiCJHVFxTsASgM5PVkg-oNUH1T9UrwwiR4Yc4EJ_7pfY_4-qU6LROLpBBaKA5lUA6avJlfBqsRuQZdF2CjIRfrKPygI3j35JFyCE"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "fallback_image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAVs91TTYIXeV_pdx5fxW3STC_3D_9KxoWuAvKpxXoyqmyQdNi6BzFLf27PEy6kdD_sTu1lXzfcpDUfb76SJ99FdSSwEGJ2EJU1YSGNWooiL68m1dRAYI9-YpR0wVova5krxwSABi4DPMl_JkirLc7TZa4Z5BWmvytFGPjL0Hs9KYoW69-wsGhkSNdT7HMBFLDaXuHDIGdBmq-zlB850Pp7wjWkrWuOcMqpSsZZtNY"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "fallback_image": "https://lh3.googleusercontent.com/aida-public/AB6AXuBgpnppOfXdtxe8Jy0hDxVngPzfqTP7UrS9J0kZkgop2oo1Vu6ksHXcpn_87eFnVDkOdpweO6at94eG3l4oOptPeots0szb0Px5RuTmIvBeltMpPtrHEzmhJgOc4IptF-YX2jYXEyIzr16HLs-YLSu848vRxMllyohJI_Q2w2h0yoooIR3lSQjQmPSVgvM5dhV0NgYnfSTjrx8Co2D6ylBsqaamZ9xt0Vxi3TTklp4"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "fallback_image": "https://lh3.googleusercontent.com/aida-public/AB6AXuBSESoJhbWYekMIgRMKOuGiDf0DtsUIVeuODQBicvc9XBTwqeEBXLbX2uNZaqnnAUG8hKeGflF7lL15NecCW5LXC9oaWdMBp3FTlV3xEa8emPFrwZTqJ4pyT_74C1hO-fv93kgpHBN6lwC0bpkgaXEe1mOOkFASIaZURCk_M9-r4655xCKNvFIEfYLCYCorHXPVQKTMBeoTCa_iMsxGE-kBc0j8hWb9idsbtnym_AM"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

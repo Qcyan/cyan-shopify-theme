@@ -1,0 +1,159 @@
+{% comment %}
+  Signature Acquisitions — 对齐 stitch Desktop 首页商品区
+{% endcomment %}
+
+{% liquid
+  assign collection = section.settings.collection
+  assign products_to_show = section.settings.products_to_show | default: 4
+  assign has_products = false
+  if collection != blank and collection.products.size > 0
+    assign has_products = true
+  endif
+%}
+
+<section class="qs-featured">
+  <div class="page-width">
+    <div class="qs-featured__header">
+      <div class="qs-featured__heading-wrap">
+        {% if section.settings.eyebrow != blank %}
+          <p class="qs-featured__eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+        {% if section.settings.title != blank %}
+          <h2 class="qs-featured__title">{{ section.settings.title }}</h2>
+        {% endif %}
+      </div>
+
+      <nav class="qs-featured__tabs" aria-label="Product filters">
+        {% if section.settings.tab_1 != blank %}
+          <a
+            href="{{ collection.url | default: routes.all_products_collection_url }}"
+            class="qs-featured__tab qs-featured__tab--active"
+          >
+            {{- section.settings.tab_1 -}}
+          </a>
+        {% endif %}
+        {% if section.settings.tab_2 != blank %}
+          <span class="qs-featured__tab">{{ section.settings.tab_2 }}</span>
+        {% endif %}
+        {% if section.settings.tab_3 != blank %}
+          <span class="qs-featured__tab">{{ section.settings.tab_3 }}</span>
+        {% endif %}
+      </nav>
+    </div>
+
+    <div class="qs-featured__grid">
+      {% if has_products %}
+        {% for product in collection.products limit: products_to_show %}
+          {% render 'qs-product-card',
+            product: product,
+            badge: product.metafields.custom.badge,
+            rating_count: product.metafields.reviews.rating_count
+          %}
+        {% endfor %}
+      {% else %}
+        {% comment %} 设计稿示意卡（无集合或空集合时） {% endcomment %}
+        {% render 'qs-product-card',
+          demo: true,
+          badge: 'Best Seller',
+          title: 'N° 07 Santal Nectar',
+          description: 'Australian Sandalwood, Cardamom Pods & Dry Amber',
+          price: '$185',
+          rating_count: '48',
+          variant_a: '50ml',
+          variant_b: '100ml',
+          variant_active: 'a',
+          image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAqgPCcZdPAOfBirVXNmzh1eVHmakLmEDkhlav8Ab27z8tSYPHaei86chO8ReTlkLGvCb75x6G1zb3ec1ce_BpW9FRiGF1cP758r1fxkZZjpvLMKfZxrAhzE8inLzgsV75DW7y13z061NhmCJPldvElFLGo3pqE6dfAeAEiHM9OHcSmEzHzk5uFN42a3DIQj303lqIMziocCwMA3rvEgBqe1VRuRUIozJuHt1WGyXg'
+        %}
+        {% render 'qs-product-card',
+          demo: true,
+          badge: 'Sculpted Living',
+          title: 'Obsidian Incense Vessel',
+          description: 'Volcanic stone cut by Kyoto stonemasons, solid brass core',
+          price: '$120',
+          rating_count: '32',
+          meta_label: 'Handcrafted',
+          image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAPEQ4uiN-7bT17h1f1IycpvMeopcAgv9QfSccnAULYfOIisJX1O7PyK8QSUi5aiSBi2lOt3y9lMChaBuQjyEaxOaCB-4n1pioeoCZ1e4A_8dggaKSA3h7O5VHua9Tz1TbIr1c0qwDaw667TX5VnXOyYdqJ8PubIvcL20goDZwBZy38fIK1EhPZ2jwqTirjPU4DYd-BEXudsVEW4XNbGq64bWJ340d4VbBAdHqZcoo'
+        %}
+        {% render 'qs-product-card',
+          demo: true,
+          badge: 'Limited Run',
+          title: 'Alabaster Ritual Candle',
+          description: 'Smoked Hinoki Wood, Black Tea leaves & Wild Bergamot',
+          price: '$160',
+          rating_count: '64',
+          variant_a: '300g',
+          variant_b: '800g',
+          variant_active: 'a',
+          image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDuYbfsvBrha543Oyxhzjs2Mwlal7dc-RGkAu_Ybxppq4yUcdO3UohDlAdQwrSvFXgjdkKoQH4z6MU0eRMrEkQCSftyLB1z_ISGqKHz1ALreTTkoqRMl_74pTrT9EJl8qsCi6DHVmJ6AoKoNk3EH1SmL6Zo78dPenYgfd1lK3njZnsVKSh-aRUPvFQ9HGfIEHH6IHaEL_cx9fwt9779Q9o2uKZr6Xj7s-SXBMAV05Q'
+        %}
+        {% render 'qs-product-card',
+          demo: true,
+          badge: 'Restocked',
+          title: 'Velvet Silk Body Elixir',
+          description: 'Organic Camellia seed oil, Neroli blossom & White Musks',
+          price: '$95',
+          rating_count: '19',
+          variant_a: '50ml',
+          variant_b: '100ml',
+          variant_active: 'a',
+          image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCfAuEiJ1vm6YqvzKq74MVOYEilenkqTwdYxtfZtFJDqIWHao919DXJd_rCELf-wsleYjWVQ6Vc_W0sXRFIbtUS1ZTNm3Y1MqvuXqMx94_hGDu8kI9igceqijgOVC_d9pfj0o6G5L_X-UBEvpvT8WRDynU7h7R3vamzuoLhxysliMZ978a3viv6S_M3La1lTsf5TsIqlw4XHj3_wX7a68C8RDSZAreAaa0Q9_v0KVY'
+        %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "热销产品",
+  "tag": "section",
+  "class": "section-qs-featured-products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "眉题",
+      "default": "Curated by Master Perfumers"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "标题",
+      "default": "Signature Acquisitions"
+    },
+    {
+      "type": "text",
+      "id": "tab_1",
+      "label": "筛选项 1（激活）",
+      "default": "All Editions"
+    },
+    {
+      "type": "text",
+      "id": "tab_2",
+      "label": "筛选项 2",
+      "default": "Extrait de Parfum"
+    },
+    {
+      "type": "text",
+      "id": "tab_3",
+      "label": "筛选项 3",
+      "default": "Tactile Objects"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "商品集合（空则显示设计稿示意）"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4,
+      "label": "显示数量"
+    }
+  ],
+  "presets": [{ "name": "热销产品" }]
+}
+{% endschema %}

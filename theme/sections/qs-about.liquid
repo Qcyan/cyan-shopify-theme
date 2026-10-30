@@ -1,0 +1,309 @@
+{% comment %}
+  Editorial Split — Our Architectural Philosophy（stitch §4）
+{% endcomment %}
+
+{% liquid
+  assign fallback_img = 'https://lh3.googleusercontent.com/aida-public/AB6AXuC4aPiheldcf_zNneby6DpMvCIE7eMVh6V4nkn2SuhnAynCX2UhnTmypo8CkzYaqa05pytRSIs602oehoxWKUMENuFsHOXkqnR3VNk6KGkRg4TagLbOcflNDSip38QMxxE15tcJzBIU-DHluZoLB0bIYKp00G09ydPRmMI-qRzzMHgBh0dcEWtr0rsxbSJFP8o92WybcSyGqbN-caXT3nRxXX__Fbfmx0YsbPbG9s4'
+%}
+
+<section class="qs-about" style="background-color: {{ section.settings.bg_color }}">
+  <div class="page-width qs-about__inner">
+    <div class="qs-about__media">
+      {% if section.settings.image != blank %}
+        {{
+          section.settings.image
+          | image_url: width: 1400
+          | image_tag:
+            loading: 'lazy',
+            sizes: '(min-width: 990px) 50vw, 100vw',
+            widths: '400, 800, 1200, 1400',
+            class: 'qs-about__img',
+            alt: section.settings.title
+        }}
+      {% else %}
+        <img
+          class="qs-about__img"
+          src="{{ fallback_img }}"
+          alt="{{ section.settings.title | escape }}"
+          loading="lazy"
+          width="900"
+          height="1125"
+        >
+      {% endif %}
+
+      {% if section.settings.media_label != blank or section.settings.media_caption != blank %}
+        <aside class="qs-about__media-card">
+          {% if section.settings.media_label != blank %}
+            <p class="qs-about__media-label">{{ section.settings.media_label }}</p>
+          {% endif %}
+          {% if section.settings.media_caption != blank %}
+            <p class="qs-about__media-caption">{{ section.settings.media_caption }}</p>
+          {% endif %}
+        </aside>
+      {% endif %}
+    </div>
+
+    <div class="qs-about__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="qs-about__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        <h2 class="qs-about__title">{{ section.settings.title }}</h2>
+      {% endif %}
+      {% if section.settings.text != blank %}
+        <div class="qs-about__text">{{ section.settings.text }}</div>
+      {% endif %}
+
+      <div class="qs-about__actions">
+        {% if section.settings.button_text != blank %}
+          <a href="{{ section.settings.link | default: '#' }}" class="button qs-about__cta">
+            {{ section.settings.button_text }}
+          </a>
+        {% endif %}
+        {% if section.settings.meta_label != blank or section.settings.meta_value != blank %}
+          <div class="qs-about__meta">
+            {% if section.settings.meta_label != blank %}
+              <span class="qs-about__meta-label">{{ section.settings.meta_label }}</span>
+            {% endif %}
+            {% if section.settings.meta_value != blank %}
+              <span class="qs-about__meta-value">{{ section.settings.meta_value }}</span>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+/* Editorial Split — px 字号 */
+
+.section-qs-about .qs-about,
+.qs-about {
+  padding: 88px 0 !important;
+  background: #eeeeec;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.qs-about__inner {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 48px 64px !important;
+  align-items: center;
+}
+
+.qs-about__media {
+  position: relative;
+}
+
+.qs-about__img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  background: #e2e3e1;
+}
+
+.qs-about__media-card {
+  position: absolute;
+  right: -16px;
+  bottom: -24px;
+  z-index: 2;
+  max-width: 220px;
+  padding: 16px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.qs-about__media-label {
+  margin: 0 0 6px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  line-height: 14px !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  color: #735a36 !important;
+}
+
+.qs-about__media-caption {
+  margin: 0 !important;
+  font-size: 12px !important;
+  line-height: 18px !important;
+  color: #2a2a2a !important;
+}
+
+.qs-about__eyebrow {
+  margin: 0 0 12px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  line-height: 14px !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  color: #735a36 !important;
+}
+
+.qs-about__title {
+  margin: 0 0 24px !important;
+  max-width: 34rem;
+  font-size: 36px !important;
+  font-weight: 300 !important;
+  line-height: 44px !important;
+  letter-spacing: -0.02em !important;
+  color: #2a2a2a !important;
+}
+
+.qs-about__text {
+  margin: 0 0 28px !important;
+  max-width: 36rem;
+  font-size: 16px !important;
+  line-height: 26px !important;
+  font-weight: 300 !important;
+  color: #444748 !important;
+}
+
+.qs-about__text p {
+  margin: 0 0 16px;
+}
+
+.qs-about__text p:last-child {
+  margin-bottom: 0;
+}
+
+.qs-about__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px 28px;
+}
+
+.qs-about a.qs-about__cta.button,
+.qs-about .qs-about__cta {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px !important;
+  padding: 0 28px !important;
+  background: #2a2a2a !important;
+  color: #fafaf8 !important;
+  border: 1px solid #2a2a2a !important;
+  border-radius: 0 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+}
+
+.qs-about__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.qs-about__meta-label {
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  color: #747878 !important;
+}
+
+.qs-about__meta-value {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 18px !important;
+  color: #2a2a2a !important;
+}
+
+@media (max-width: 989px) {
+  .qs-about__inner {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+
+  .qs-about__media-card {
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .qs-about__title {
+    font-size: 30px !important;
+    line-height: 38px !important;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "品牌故事",
+  "tag": "section",
+  "class": "section-qs-about",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "眉题",
+      "default": "Our Architectural Philosophy"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "引用标题",
+      "default": "We do not invent perfumes; we give sensory permanence to fleeting botanical memory."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "正文",
+      "default": "<p>Each formulation emerges from an unhurried, six-month maturation period in charred French oak casks. Free of denatured synthetic alcohols, parabens, and aggressive stabilizers, our extraits remain raw, living compositions that adapt to the wearer's natural skin heat.</p><p>Collaborating between fifth-generation master noses in Grasse and heritage woodturners in Kyoto, Atelier Maison bridges French haute perfumery discipline with Japanese wabi-sabi restraint.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "左侧图片"
+    },
+    {
+      "type": "text",
+      "id": "media_label",
+      "label": "图片角标眉题",
+      "default": "The Grasse Sanctuary"
+    },
+    {
+      "type": "textarea",
+      "id": "media_caption",
+      "label": "图片角标说明",
+      "default": "Cold expression preserves ephemeral terpenes lost in modern thermal steam."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "按钮",
+      "default": "Read The Craft Journal"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "按钮链接"
+    },
+    {
+      "type": "text",
+      "id": "meta_label",
+      "label": "右侧元信息标签",
+      "default": "Harvest Period"
+    },
+    {
+      "type": "text",
+      "id": "meta_value",
+      "label": "右侧元信息值",
+      "default": "May Rose & Hinoki 2024/25"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "#EEEEEC"
+    }
+  ],
+  "presets": [{ "name": "品牌故事" }]
+}
+{% endschema %}

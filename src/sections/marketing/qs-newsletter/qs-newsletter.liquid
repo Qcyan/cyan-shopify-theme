@@ -1,0 +1,114 @@
+{% comment %}
+  Atelier Circle — stitch §7
+  浅底 + 深色卡片；标题 Inaugural Acquisition Privilege；按钮 Request Entry
+  （The Olfactory Gazette 在 footer，不在此处）
+{% endcomment %}
+
+<section class="qs-newsletter">
+  <div class="page-width">
+    <div class="qs-newsletter__card" style="background-color: {{ section.settings.bg_color }}">
+      {% if section.settings.eyebrow != blank %}
+        <p class="qs-newsletter__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        <h2 class="qs-newsletter__title">{{ section.settings.title }}</h2>
+      {% endif %}
+      {% if section.settings.text != blank %}
+        <p class="qs-newsletter__text">{{ section.settings.text }}</p>
+      {% endif %}
+
+      {% form 'customer', class: 'qs-newsletter__form' %}
+        <input type="hidden" name="contact[tags]" value="newsletter,atelier-circle">
+        <label class="visually-hidden" for="QsNewsletterEmail-{{ section.id }}">Email</label>
+        <input
+          id="QsNewsletterEmail-{{ section.id }}"
+          class="qs-newsletter__input"
+          type="email"
+          name="contact[email]"
+          value="{{ form.email }}"
+          placeholder="{{ section.settings.placeholder }}"
+          required
+          autocomplete="email"
+        >
+        <button type="submit" class="qs-newsletter__submit" name="commit">
+          {{ section.settings.button_label }}
+        </button>
+
+        {% if form.errors %}
+          <p class="qs-newsletter__message qs-newsletter__message--error" role="alert">
+            {{ form.errors.translated_fields.email | capitalize }}
+            {{ form.errors.messages.email }}
+          </p>
+        {% endif %}
+        {% if form.posted_successfully? %}
+          <p class="qs-newsletter__message qs-newsletter__message--success" role="status">
+            {{ section.settings.success_message }}
+          </p>
+        {% endif %}
+      {% endform %}
+
+      {% if section.settings.fine_print != blank %}
+        <p class="qs-newsletter__fine">{{ section.settings.fine_print }}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "邮件订阅",
+  "tag": "section",
+  "class": "section-qs-newsletter",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "眉题",
+      "default": "The Atelier Circle"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "标题",
+      "default": "Inaugural Acquisition Privilege"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "描述",
+      "default": "Receive a 10% ceremonial courtesy on your first acquisition, accompanied by private access to limited Grasse seasonal distillations and private salon invitations."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "输入框占位",
+      "default": "Your preferred email address"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "按钮文字",
+      "default": "Request Entry"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "成功提示",
+      "default": "Welcome to the Atelier Circle."
+    },
+    {
+      "type": "text",
+      "id": "fine_print",
+      "label": "底部说明",
+      "default": "Unsubscribing is honored without resistance. We do not transmit frequent correspondences."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "卡片背景色",
+      "default": "#2A2A2A"
+    }
+  ],
+  "presets": [{ "name": "邮件订阅" }]
+}
+{% endschema %}

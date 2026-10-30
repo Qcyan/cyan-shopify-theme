@@ -1,0 +1,127 @@
+{% comment %}
+  Footer — 含 The Olfactory Gazette（设计稿页脚订阅）
+{% endcomment %}
+
+<footer class="qs-footer">
+  <div class="qs-footer__inner page-width">
+    <div class="qs-footer__gazette">
+      {% if section.settings.gazette_title != blank %}
+        <h3 class="qs-footer__gazette-title">{{ section.settings.gazette_title }}</h3>
+      {% endif %}
+      {% if section.settings.gazette_text != blank %}
+        <p class="qs-footer__gazette-text">{{ section.settings.gazette_text }}</p>
+      {% endif %}
+      {% form 'customer', class: 'qs-footer__form' %}
+        <input type="hidden" name="contact[tags]" value="newsletter,olfactory-gazette">
+        <label class="visually-hidden" for="QsFooterEmail-{{ section.id }}">Email</label>
+        <input
+          id="QsFooterEmail-{{ section.id }}"
+          class="qs-footer__input"
+          type="email"
+          name="contact[email]"
+          value="{{ form.email }}"
+          placeholder="{{ section.settings.gazette_placeholder }}"
+          required
+          autocomplete="email"
+        >
+        <button type="submit" class="qs-footer__submit" name="commit">
+          {{ section.settings.gazette_button }}
+        </button>
+      {% endform %}
+    </div>
+
+    <div class="qs-footer__menus">
+      {% for block in section.blocks %}
+        <div class="qs-footer__col" {{ block.shopify_attributes }}>
+          {% if block.settings.heading != blank %}
+            <p class="qs-footer__heading">{{ block.settings.heading }}</p>
+          {% endif %}
+          {% if block.settings.menu != blank %}
+            <ul class="qs-footer__list">
+              {% for link in block.settings.menu.links %}
+                <li>
+                  <a href="{{ link.url }}">{{ link.title }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="qs-footer__bottom page-width">
+    <p class="qs-footer__copyright">
+      &copy; {{ 'now' | date: '%Y' }}
+      {{ section.settings.copyright | default: shop.name }}
+    </p>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "轻奢页脚",
+  "tag": "section",
+  "class": "section-qs-footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "gazette_title",
+      "label": "Gazette 标题",
+      "default": "The Olfactory Gazette"
+    },
+    {
+      "type": "textarea",
+      "id": "gazette_text",
+      "label": "Gazette 说明",
+      "default": "Receive invitations to private seasonal salons, olfactory compositions, and discreet archival releases."
+    },
+    {
+      "type": "text",
+      "id": "gazette_placeholder",
+      "label": "邮箱占位",
+      "default": "Your email address"
+    },
+    {
+      "type": "text",
+      "id": "gazette_button",
+      "label": "订阅按钮",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "copyright",
+      "label": "版权后缀",
+      "default": "Atelier Maison. All rights reserved."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "菜单列",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "列标题",
+          "default": "Shop"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "菜单"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "轻奢页脚",
+      "blocks": [
+        { "type": "menu", "settings": { "heading": "Shop" } },
+        { "type": "menu", "settings": { "heading": "Help" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

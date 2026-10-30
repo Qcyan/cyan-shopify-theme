@@ -1,42 +1,19 @@
 /*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
+ * Cart — Desktop (stitch/desktop-cart.html)
  */
 {
   "sections": {
-    "cart-items": {
-      "type": "main-cart-items",
+    "cart_main": {
+      "type": "qs-cart",
       "settings": {
-        "padding_top": 36,
-        "padding_bottom": 36
+        "title": "Your Selections",
+        "free_ship_cents": 15000,
+        "ship_locked_label": "Complimentary Worldwide Courier",
+        "ship_locked_text": "Add more to unlock Atelier signature black-box & raw silk wrapping.",
+        "ship_unlocked_text": "Your reserve qualifies for Atelier signature black-box & raw silk wrapping.",
+        "upsell_title": "Harmonious Pairings"
       }
-    },
-    "cart-footer": {
-      "type": "main-cart-footer",
-      "blocks": {
-        "subtotal": {
-          "type": "subtotal",
-          "settings": {}
-        },
-        "buttons": {
-          "type": "buttons",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "subtotal",
-        "buttons"
-      ],
-      "settings": {}
     }
   },
-  "order": [
-    "cart-items",
-    "cart-footer"
-  ]
+  "order": ["cart_main"]
 }

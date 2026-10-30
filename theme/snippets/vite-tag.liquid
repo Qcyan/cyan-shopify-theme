@@ -7,8 +7,8 @@
   assign path = entry | replace: '~/', '../' | replace: '@/', '../'
 %}
 {% if path == "/src/entrypoints/theme.css" or path == "theme.css" %}
-  {{ 'theme-tn0RQdqM.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
+  {{ 'theme-Bb7MsJMS.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
 {% elsif path == "/src/entrypoints/theme.js" or path == "theme.js" %}
-  <script src="{{ 'theme-DXm_YyJg.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
-  {{ 'theme-tn0RQdqM.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
+  <script src="{{ 'theme-C_1J1C2c.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
+  {{ 'theme-Bb7MsJMS.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
 {% endif %}

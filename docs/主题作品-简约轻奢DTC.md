@@ -1,13 +1,19 @@
-# 主题作品：简约轻奢风 DTC 品牌站
+# 主题作品：Atelier Maison（Quiet Atelier）
+
+设计来源：
+
+- Stitch 项目：[https://stitch.withgoogle.com/projects/1774047669727653192](https://stitch.withgoogle.com/projects/1774047669727653192)
+- 设计系统：`stitch/DESIGN.md`（Quiet Atelier）
+- PC 稿：`stitch/desktop-home.html` / `desktop-collection.html` / `desktop-pdp.html` / `desktop-cart.html`
 
 ## 1. 定位
 
 | 项 | 内容 |
 |----|------|
+| 品牌示意 | **Atelier Maison**（香氛 / 轻奢 DTC） |
 | 类型 | Shopify Online Store 2.0 主题作品集 |
-| 风格 | **简约轻奢** DTC 品牌站 |
-| 品类适配 | 美妆 / 香薰 / 小众配饰（通用，不绑死单一垂类） |
-| 目标 | 面试好看、代码干净规范、后台可配置、响应式 |
+| 风格 | Quiet luxury：象牙底、炭黑主按钮、香槟金仅作点缀 |
+| 目标 | 对齐 Stitch PC 稿 + DESIGN.md；后台可配置、响应式 |
 
 **面试官想看到的点：**
 
@@ -24,36 +30,31 @@
 
 ## 2. 站点风格设定
 
-### 2.1 色板（CSS 变量建议）
+### 2.1 色板（以 `stitch/DESIGN.md` 为准）
 
 | 角色 | 色值 | 用途 |
 |------|------|------|
-| 主色 | `#2A2A2A` | 标题、正文、深色按钮文字底 |
-| 辅助色 | `#C8A97E` | CTA 按钮、点缀线、悬停强调 |
-| 背景 | `#FAFAF8` | 页面底、区块浅底 |
-| 次要文字 | `#555555` | 描述、辅助说明 |
-| 纯白 | `#FFFFFF` | 卡片 / 弹层（如需） |
+| Primary / CTA | `#2A2A2A` | 主按钮、标题、图标（**不是**大面积香槟金填充） |
+| Gold accent | `#C8A97E` | 眉题、激活态、徽章边框（点缀） |
+| Canvas | `#FAFAF8` | 全站底 |
+| Ivory | `#F5F3EF` | 卡片图床、输入底 |
+| Muted | `#737373` | 次要文案、规格 |
+| Border | `#EAE6DF` | 发丝线分割 |
 
-建议在 `src/entrypoints/theme.css` 定义：
-
-```css
-:root {
-  --qs-color-ink: #2a2a2a;
-  --qs-color-gold: #c8a97e;
-  --qs-color-bg: #fafaf8;
-  --qs-color-muted: #555555;
-}
-```
+实现：`src/entrypoints/theme.css`（`--qs-*` 变量）。
 
 ### 2.2 字体与气质
 
-- 字体：无衬线 **Inter**（或主题设置里接近的 system / Shopify 字体；作品集可用 Google Fonts / Shopify font picker）
-- 方向：极简 DTC，不花哨，突出产品质感
-- 圆角克制（接近直角或 `2px`），少阴影、少渐变堆叠
+- 字体：**Inter**（Display `300`，标签大写宽字距）
+- 圆角：`0`（直角）
+- 阴影：避免；深度靠色阶与发丝线
 
-### 2.3 已有对齐
+### 2.3 PC 稿覆盖范围
 
-现有 `hero-banner` 已使用主色 / 香槟金 / 米白，后续区块统一跟这套 token，避免风格漂移。
+| 稿面 | 状态 |
+|------|------|
+| 品牌首页 | 已按稿重做 Section + token |
+| 系列列表 / PDP / 购物车抽屉 | 下一阶段（Dawn 模板深度定制） |
 
 ---
 
@@ -145,6 +146,7 @@ theme/assets/section-*.css
 
 - 新区块一律进 **`src/`**，不要只改 `theme/` 后忘记源码
 - Dawn 未改造文件继续留在 `theme/`
+- Section/Snippet 的同名 `.css` 由 `build-liquid` **注入 `{% stylesheet %}`**（不单靠 assets 外链，避免预览不同步导致布局裸奔）
 
 ### 5.2 Liquid / 可访问性 / 性能
 
@@ -178,13 +180,27 @@ theme/assets/section-*.css
 
 ## 7. 验收清单（作品集自检）
 
-- [ ] 首页 8 个区块风格统一（炭黑 / 香槟金 / 米白）
-- [ ] 主题编辑器可添加、排序、开关各 Section
-- [ ] 关键文案、图片、链接均可后台改，不改代码
-- [ ] 375px / 768px / 1280px 布局正常
-- [ ] 非首屏图片懒加载；Hero 首屏不懒加载
-- [ ] 源码在 `src/`，`npm run build` 后 `theme/` 可 push
-- [ ] 无调试输出、无明显 Dawn「Generated test data」残留在首页
+- [x] 首页主链路 Section 已落地（Hero / 热销 / About / USPs / IG / Newsletter + 轻奢 Footer；Header 沿用 Dawn + 样式覆盖）
+- [x] 主题编辑器可添加（各 section 含 presets）
+- [x] 关键文案、图片、链接均可后台改
+- [ ] 375px / 768px / 1280px 布局实机确认
+- [x] 非首屏图片懒加载；Hero 首屏 eager
+- [x] 源码在 `src/`，`npm run build` 同步到 `theme/`
+- [x] 首页已替换 Generated test data 模板结构
+
+### 已实现文件（源码）
+
+| 区块 | 路径 |
+|------|------|
+| Token / 字体 | `src/entrypoints/theme.css` |
+| Hero | `src/sections/marketing/hero-banner/` |
+| 热销 + 卡片 | `src/sections/marketing/qs-featured-products/` + `src/snippets/product/qs-product-card/` |
+| About | `src/sections/marketing/qs-about/` |
+| USPs | `src/sections/marketing/qs-usps/` |
+| Instagram | `src/sections/marketing/qs-instagram/` |
+| Newsletter | `src/sections/marketing/qs-newsletter/` |
+| Footer | `src/sections/layout/qs-footer/` |
+| 首页挂载 | `theme/templates/index.json` |
 
 ---
 

@@ -1,0 +1,698 @@
+{% comment %}
+  The Permanent Collection — 对齐 stitch/desktop-collection.html
+{% endcomment %}
+
+{% liquid
+  assign per_page = section.settings.products_per_page | default: 16
+  assign title = section.settings.title | default: collection.title
+  assign eyebrow = section.settings.eyebrow
+  assign grade = section.settings.grade_label
+  assign description = section.settings.description
+  if description == blank and collection.description != blank
+    assign description = collection.description | strip_html
+  endif
+  assign meta_line = section.settings.meta_line
+  assign product_count = collection.products_count
+%}
+
+<section
+  class="qs-collection"
+  id="qs-collection-{{ section.id }}"
+  data-columns="{{ section.settings.columns_desktop | default: 3 }}"
+>
+  <div class="qs-collection__hero page-width">
+    <nav class="qs-collection__breadcrumb" aria-label="Breadcrumb">
+      <a href="{{ routes.root_url }}">Home</a>
+      <span class="qs-collection__bc-sep" aria-hidden="true">/</span>
+      <a href="{{ routes.all_products_collection_url }}">Collections</a>
+      <span class="qs-collection__bc-sep" aria-hidden="true">/</span>
+      <span aria-current="page">{{ section.settings.breadcrumb_current | default: 'Permanent Series' }}</span>
+    </nav>
+
+    <div class="qs-collection__hero-row">
+      <div class="qs-collection__hero-main">
+        <div class="qs-collection__eyebrow-row">
+          {% if eyebrow != blank %}
+            <span class="qs-collection__eyebrow">{{ eyebrow }}</span>
+          {% endif %}
+          {% if grade != blank %}
+            <span class="qs-collection__dot" aria-hidden="true"></span>
+            <span class="qs-collection__grade">{{ grade }}</span>
+          {% endif %}
+        </div>
+        <h1 class="qs-collection__title">{{ title }}</h1>
+      </div>
+
+      <div class="qs-collection__hero-aside">
+        {% if description != blank %}
+          <p class="qs-collection__desc">{{ description }}</p>
+        {% endif %}
+        <div class="qs-collection__stats">
+          <span class="qs-collection__stat-strong">
+            {{- product_count }}
+            {{ section.settings.creations_label | default: 'Creations' -}}
+          </span>
+          {% if meta_line != blank %}
+            <span class="qs-collection__stat-sep" aria-hidden="true">·</span>
+            <span>{{ meta_line }}</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="qs-collection__toolbar">
+    <div class="qs-collection__toolbar-inner page-width">
+      <div class="qs-collection__refinements">
+        <span class="qs-collection__refinements-label">Active Refinements:</span>
+        {% if section.settings.chip_1 != blank %}
+          <span class="qs-collection__chip">
+            {{ section.settings.chip_1 }}
+            <span class="qs-collection__chip-x" aria-hidden="true">×</span>
+          </span>
+        {% endif %}
+        {% if section.settings.chip_2 != blank %}
+          <span class="qs-collection__chip">
+            {{ section.settings.chip_2 }}
+            <span class="qs-collection__chip-x" aria-hidden="true">×</span>
+          </span>
+        {% endif %}
+        {% if section.settings.chip_3 != blank %}
+          <span class="qs-collection__chip">
+            {{ section.settings.chip_3 }}
+            <span class="qs-collection__chip-x" aria-hidden="true">×</span>
+          </span>
+        {% endif %}
+        <a class="qs-collection__reset" href="{{ collection.url }}">Reset All</a>
+      </div>
+
+      <div class="qs-collection__toolbar-actions">
+        <div class="qs-collection__view-toggle" role="group" aria-label="Grid density">
+          <button
+            type="button"
+            class="qs-collection__view-btn is-active"
+            data-cols="3"
+            aria-pressed="true"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M3 5h5v14H3V5zm7 0h5v14h-5V5zm7 0h5v14h-5V5z"/>
+            </svg>
+            3 Col
+          </button>
+          <button
+            type="button"
+            class="qs-collection__view-btn"
+            data-cols="4"
+            aria-pressed="false"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M3 5h4v14H3V5zm5.5 0h4v14h-4V5zM14 5h4v14h-4V5zm5.5 0H24v14h-4.5V5z"/>
+            </svg>
+            4 Col
+          </button>
+        </div>
+
+        <form class="qs-collection__sort" method="get" action="{{ collection.url }}">
+          <label class="qs-collection__sort-label" for="SortBy-{{ section.id }}">Sort By</label>
+          <select
+            name="sort_by"
+            id="SortBy-{{ section.id }}"
+            class="qs-collection__sort-select"
+            onchange="this.form.submit()"
+          >
+            {% for option in collection.sort_options %}
+              <option
+                value="{{ option.value }}"
+                {% if option.value == collection.sort_by %}
+                  selected
+                {% endif %}
+              >
+                {{ option.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="qs-collection__body page-width">
+    <aside class="qs-collection__sidebar" aria-label="Refinements">
+      <div class="qs-collection__panel">
+        <div class="qs-collection__panel-head">
+          <h2 class="qs-collection__panel-title">Category</h2>
+          <span class="qs-collection__panel-meta">{{ section.settings.category_meta | default: '05' }}</span>
+        </div>
+        <ul class="qs-collection__cat-list">
+          <li>
+            <a class="qs-collection__cat-row is-active" href="{{ collection.url }}">
+              <span>All Offerings</span>
+              <span class="qs-collection__count qs-collection__count--accent">{{ section.settings.count_all | default: 24 }}</span>
+            </a>
+          </li>
+          <li>
+            <a class="qs-collection__cat-row" href="#">
+              <span>Haute Parfumerie</span>
+              <span class="qs-collection__count">{{ section.settings.count_parfum | default: 12 }}</span>
+            </a>
+          </li>
+          <li>
+            <a class="qs-collection__cat-row" href="#">
+              <span>Incense &amp; Vessels</span>
+              <span class="qs-collection__count">{{ section.settings.count_incense | default: 4 }}</span>
+            </a>
+          </li>
+          <li>
+            <a class="qs-collection__cat-row" href="#">
+              <span>Botanical Candles</span>
+              <span class="qs-collection__count">{{ section.settings.count_candles | default: 5 }}</span>
+            </a>
+          </li>
+          <li>
+            <a class="qs-collection__cat-row" href="#">
+              <span>Ritual Body Care</span>
+              <span class="qs-collection__count">{{ section.settings.count_body | default: 3 }}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="qs-collection__panel">
+        <div class="qs-collection__panel-head">
+          <h2 class="qs-collection__panel-title">Olfactory Family</h2>
+          <span class="qs-collection__panel-meta" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6zm-2-2v2H3v2h10V7H13z"/>
+            </svg>
+          </span>
+        </div>
+        <ul class="qs-collection__filter-list">
+          <li>
+            <label class="qs-collection__check qs-collection__check--row">
+              <span class="qs-collection__check-left">
+                <input type="checkbox" checked disabled>
+                Woody &amp; Resinous
+              </span>
+              <span class="qs-collection__count">{{ section.settings.count_woody | default: 9 }}</span>
+            </label>
+          </li>
+          <li>
+            <label class="qs-collection__check qs-collection__check--row">
+              <span class="qs-collection__check-left">
+                <input type="checkbox" disabled>
+                Smoky Amber &amp; Oud
+              </span>
+              <span class="qs-collection__count">{{ section.settings.count_smoky | default: 6 }}</span>
+            </label>
+          </li>
+          <li>
+            <label class="qs-collection__check qs-collection__check--row">
+              <span class="qs-collection__check-left">
+                <input type="checkbox" disabled>
+                Crisp Citrus &amp; Herb
+              </span>
+              <span class="qs-collection__count">{{ section.settings.count_citrus | default: 5 }}</span>
+            </label>
+          </li>
+          <li>
+            <label class="qs-collection__check qs-collection__check--row">
+              <span class="qs-collection__check-left">
+                <input type="checkbox" disabled>
+                Powdery White Floral
+              </span>
+              <span class="qs-collection__count">{{ section.settings.count_floral | default: 4 }}</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="qs-collection__panel">
+        <h2 class="qs-collection__panel-title qs-collection__panel-title--solo">Vessel Capacity</h2>
+        <div class="qs-collection__vessel-grid">
+          <span class="qs-collection__pill">30 ml Flacon</span>
+          <span class="qs-collection__pill is-active">50 ml Flacon</span>
+          <span class="qs-collection__pill">100 ml Flacon</span>
+          <span class="qs-collection__pill">Discovery 2ml</span>
+        </div>
+      </div>
+
+      <div class="qs-collection__panel">
+        <div class="qs-collection__panel-head qs-collection__panel-head--price">
+          <h2 class="qs-collection__panel-title">Price Interval</h2>
+          <span class="qs-collection__price-value">$120 — $240</span>
+        </div>
+        <div class="qs-collection__price-slider">
+          <input
+            class="qs-collection__range"
+            type="range"
+            min="45"
+            max="380"
+            value="240"
+            disabled
+            aria-label="Price interval"
+          >
+          <div class="qs-collection__price-ends">
+            <span>$45 USD</span>
+            <span>$380 USD</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="qs-collection__panel qs-collection__panel--dispatch">
+        <div class="qs-collection__dispatch-copy">
+          <span class="qs-collection__panel-title">Immediate Dispatch</span>
+          <span class="qs-collection__dispatch-sub">In stock items only</span>
+        </div>
+        <label class="qs-collection__toggle" aria-label="In stock items only">
+          <input type="checkbox" checked disabled>
+          <span class="qs-collection__toggle-track" aria-hidden="true"></span>
+        </label>
+      </div>
+
+      <div class="qs-collection__guarantee">
+        <p class="qs-collection__guarantee-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+          </svg>
+          Atelier Guarantee
+        </p>
+        <p class="qs-collection__guarantee-text">
+          {{ section.settings.guarantee_text }}
+        </p>
+      </div>
+    </aside>
+
+    {% capture qs_discovery_banner %}
+      <aside class="qs-collection__promo" aria-label="{{ section.settings.promo_title | default: 'The Bespoke Discovery Coffret' | escape }}">
+        <div class="qs-collection__promo-copy">
+          <p class="qs-collection__promo-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2l1.8 5.5L19 9.3l-5.2 1.8L12 17l-1.8-5.9L5 9.3l5.2-1.8L12 2zm7 11l.9 2.8L23 17l-3.1.9L19 21l-.9-3.1L15 17l3.1-.9L19 13zM5 13l.9 2.8L9 17l-3.1.9L5 21l-.9-3.1L1 17l3.1-.9L5 13z"/>
+            </svg>
+            {{ section.settings.promo_eyebrow | default: 'Introductory Protocol' }}
+          </p>
+          <h3 class="qs-collection__promo-title">
+            {{ section.settings.promo_title | default: 'The Bespoke Discovery Coffret' }}
+          </h3>
+          <p class="qs-collection__promo-text">
+            {{ section.settings.promo_text | default: 'Experience five iconic olfactory silhouettes poured into 2ml hand-crimped glass vials. The complete purchase price is fully credited toward your subsequent full flacon acquisition.' }}
+          </p>
+          <div class="qs-collection__promo-actions">
+            {% if section.settings.promo_button_link != blank %}
+              <a class="qs-collection__promo-btn" href="{{ section.settings.promo_button_link }}">
+                {{- section.settings.promo_button_label | default: 'Acquire Discovery Set — $45' -}}
+              </a>
+            {% else %}
+              <span class="qs-collection__promo-btn">
+                {{- section.settings.promo_button_label | default: 'Acquire Discovery Set — $45' -}}
+              </span>
+            {% endif %}
+            <span class="qs-collection__promo-note">
+              {{- section.settings.promo_note | default: 'Complimentary Postage' -}}
+            </span>
+          </div>
+        </div>
+        <div class="qs-collection__promo-media">
+          {% if section.settings.promo_image != blank %}
+            {{
+              section.settings.promo_image
+              | image_url: width: 800
+              | image_tag: loading: 'lazy', class: 'qs-collection__promo-image', alt: section.settings.promo_title
+            }}
+          {% else %}
+            <img
+              class="qs-collection__promo-image"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrY9oRpYP67plvdOLUXzHJKbYd_z2Hbk2v_0MIILyjB2cfY5UmDQH1xeaDZMEBLRwA_sLsGuoSlGMrB9S3BlabhLwzNyZ0DJe2nJxGFkLcIpnj9pMwk-e7Vceretu7Fh0OQVrCVk3C6cbnxAkZoP8PqtphmGx47skbtrETlBkv2H8u_-q12WB7zURcqutZmpdcSP7HDfN2qIUmhJw5xS8rAGE2Nb1Ztybr2fn4Quo"
+              alt="{{ section.settings.promo_title | default: 'Discovery Coffret' | escape }}"
+              loading="lazy"
+              width="640"
+              height="640"
+            >
+          {% endif %}
+        </div>
+      </aside>
+    {% endcapture %}
+
+    <div class="qs-collection__main">
+      {% paginate collection.products by per_page %}
+        <div class="qs-collection__grid" data-grid>
+          {% if collection.products.size > 0 %}
+            {% for product in collection.products %}
+              {% liquid
+                assign notes = product.metafields.custom.notes.value | default: product.metafields.custom.notes
+                if notes == blank
+                  assign notes = product.type
+                endif
+                assign badge = product.metafields.custom.badge.value | default: product.metafields.custom.badge
+                assign rating_score = product.metafields.reviews.rating.value
+                assign rating_count = product.metafields.reviews.rating_count.value | default: product.metafields.reviews.rating_count
+              %}
+              {% render 'qs-product-card',
+                product: product,
+                variant: 'collection',
+                badge: badge,
+                notes: notes,
+                rating_score: rating_score,
+                rating_count: rating_count
+              %}
+              {% if forloop.index == 3 and section.settings.show_promo != false %}
+                {{ qs_discovery_banner }}
+              {% endif %}
+            {% endfor %}
+            {% if collection.products.size < 3 and section.settings.show_promo != false %}
+              {{ qs_discovery_banner }}
+            {% endif %}
+          {% else %}
+            {% comment %} 设计稿示意 — 无商品时展示 {% endcomment %}
+            {% render 'qs-product-card',
+              demo: true,
+              variant: 'collection',
+              badge: 'Signature Flacon',
+              notes: 'Hinoki — Kyara — Vetiver',
+              title: 'Santal Kyōto',
+              description: 'Extrait de Parfum — 24% Concentration',
+              price: '$185',
+              rating_score: '4.9',
+              rating_count: '84',
+              variant_a: '50ml',
+              variant_b: '100ml',
+              variant_active: 'a',
+              image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB-OcyPC1byvL68xpL4w0TcqhYO9syPrijqXJVDYic5YxRmfxYE-RAjgz6vvlD5sCBetQIYVbk4tmLmSZZwg8u6TEQJDqSH8AQVtDzjDDspDxAULHHsp47xL6eHYY6rbiC0bq06K0vqGDWFasPP1j1gVBi1tsd-juIIfaaN8n5w6O-4VRFH-SoSE338zZhyQkpGorTesBD9LD9vmmBd8eEIf2qn8rHTIhsQSmudWxA'
+            %}
+            {% render 'qs-product-card',
+              demo: true,
+              variant: 'collection',
+              badge: 'Edition 500',
+              notes: 'Somalian Frankincense — Birch Tar',
+              title: 'Cendre Sacrée',
+              description: 'Purified Resinous Incense Elixir',
+              price: '$220',
+              rating_score: '5.0',
+              rating_count: '31',
+              variant_a: '50ml',
+              meta_label: 'Refillable',
+              image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDAgvtM7HUZTaKlwfACGVnxFtWYrIHV-9DkIfYQ_-vTbY3sEt0eB2ZiphnmGCp3QmcAd7e6NEi7IFWkdLmsPGKQ8Pj95PzxKkTgWUnsjId_1G5Mte2druItQBbabvZhluGfuMUuDEmY-Yd35e5X3DHMP1FAVsvEtEwBlPF7m2QrSuqpWYy3_LckyUOC_naI940r1CmSpB--EXECUeqArL1VMFRr7upzDMKBMJVLmjs'
+            %}
+            {% render 'qs-product-card',
+              demo: true,
+              variant: 'collection',
+              badge: 'Summer Atelier',
+              notes: 'Italian Neroli — Bergamot Peel',
+              title: 'Neroli Éphémère',
+              description: 'Eau de Parfum — Bright Citrus Floral',
+              price: '$160',
+              rating_score: '4.8',
+              rating_count: '56',
+              variant_a: '50ml',
+              variant_b: '100ml',
+              variant_active: 'a',
+              image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBSHl_w3XSXxGGi0IcOF7bnPUrGi_XMTBsGtUXlJO7l_0IY5ShJ9vwlnTXGaYVd5udsNBYeLw3-jZM3lcs1r3lyK8CZr5sH8yLVQmRs9o6h2HrbXz3nIEtDuG_maB-n8DeEhtWuEyd0eImYtPU8G_3LxFqkPxSpforMz51gcxCbIOLeNunmOumm9nJUddd_1QlvUJlgV2-njCOsZ3xTk_ybfP1xRIdmMhUU0W6jUq8'
+            %}
+            {{ qs_discovery_banner }}
+            {% render 'qs-product-card',
+              demo: true,
+              variant: 'collection',
+              badge: 'Sculpted Living',
+              notes: 'Volcanic Basalt — Brass Core',
+              title: 'Kōro Basalt Vessel',
+              description: 'Incense Vessel — Kyoto Stonemasonry',
+              price: '$120',
+              rating_score: '4.7',
+              rating_count: '22',
+              meta_label: 'Handcrafted',
+              image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDK5BlJFWuCzu8vvjxr5dUIt19e-J0bZqL4aUWAbBDPg2wg6NHLNCwHddno7RqSaBWK4o4tPcnTshmV3wdV1xpf5r5_n9kMdZ5ggDyevR9NbHkAE0D8K-wJd1oV6QEsuVmUNw6hfrH95YxZ2v0ZjvRp3eMTRCc55i4B4fpRuz2r4-DQexQyXT_M6DQEmiJdA8lUlhVmx-_CC_WWLm2rwhg-YQKKEg2cgkwfJLM2gcU'
+            %}
+            {% render 'qs-product-card',
+              demo: true,
+              variant: 'collection',
+              badge: 'Limited Run',
+              notes: 'Damask Rose — Soft Woods',
+              title: "Jardin d'Ombre",
+              description: 'Botanical Candle — 55h Burn',
+              price: '$95',
+              rating_score: '4.9',
+              rating_count: '41',
+              variant_a: '220g',
+              image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDzloCnh2shgEouuOHp_NeOJZkXldxp6Zi149ldttMk6XmT2cA0Dp7mT8ycV4tpXHLif4vrKjQGnfbhuHAjM--yJGc7iV_VkEJKF5QZve2Z953w_gK8ISbnfo7LhU-rwyq_4k7A1ZrdOPd20JhHvkWIgP25TLZx43pZHYbF71ayU8hlre6YUaIXDm2wGc515gn9xCwmbbtBOy3sTqKUJkDS4OmogJNGL1SOnzR-KrU'
+            %}
+            {% render 'qs-product-card',
+              demo: true,
+              variant: 'collection',
+              badge: 'Archive Release',
+              notes: 'Cedar — Black Pepper',
+              title: "Bois d'Hiver",
+              description: 'Extrait de Parfum — Spiced Woods',
+              price: '$195',
+              rating_score: '5.0',
+              rating_count: '19',
+              variant_a: '50ml',
+              variant_b: '100ml',
+              variant_active: 'a',
+              image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAWpEVd30rTQ1A089yCcwfuN_m0Y3_WFQxP9vW_qXDznIDLX7XlhAwcKjlspmfWiu9bRi-Ob4Kpz4QUX7RjpYo-h7OWXJysRV7sG6h9etqrswlkS1MvwzPv35Yo_USLnoHMIHv5JnyorDh_iGcCfeZ8JTq7ULI6NeOjWZymlgq8vDbo-K1Ee9dNhYZDAyzzM1FcnVBz1UUfDmX-19D7_qrMYTaSuwxn99BCU3WN-2I'
+            %}
+          {% endif %}
+        </div>
+
+        {% if paginate.pages > 1 %}
+          <nav class="qs-collection__pagination" aria-label="Pagination">
+            {% if paginate.previous %}
+              <a href="{{ paginate.previous.url }}">Previous</a>
+            {% endif %}
+            <span class="qs-collection__page-status">
+              Page {{ paginate.current_page }} of {{ paginate.pages }}
+            </span>
+            {% if paginate.next %}
+              <a href="{{ paginate.next.url }}">Next</a>
+            {% endif %}
+          </nav>
+        {% endif %}
+      {% endpaginate %}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('qs-collection-{{ section.id }}');
+    if (!root) return;
+    var grid = root.querySelector('[data-grid]');
+    var buttons = root.querySelectorAll('.qs-collection__view-btn');
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var cols = btn.getAttribute('data-cols');
+        root.setAttribute('data-columns', cols);
+        buttons.forEach(function (b) {
+          var on = b === btn;
+          b.classList.toggle('is-active', on);
+          b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        if (grid) grid.dataset.cols = cols;
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "系列列表 Permanent",
+  "tag": "section",
+  "class": "section-qs-collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "breadcrumb_current",
+      "label": "面包屑当前项",
+      "default": "Permanent Series"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "眉题",
+      "default": "Vol. IV — Kyoto & Grasse Atelier"
+    },
+    {
+      "type": "text",
+      "id": "grade_label",
+      "label": "等级标签",
+      "default": "Archival Grade"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "标题（空则用集合名）",
+      "default": "The Permanent Collection"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "描述（空则用集合描述）",
+      "default": "Curated sensorial fragrances, pure mineral vessels, and timeless ritual objects crafted for mindful contemplation."
+    },
+    {
+      "type": "text",
+      "id": "creations_label",
+      "label": "数量后缀",
+      "default": "Creations"
+    },
+    {
+      "type": "text",
+      "id": "meta_line",
+      "label": "统计副文案",
+      "default": "Ethically Foraged Botanicals"
+    },
+    {
+      "type": "text",
+      "id": "chip_1",
+      "label": "筛选 Chip 1",
+      "default": "Extrait de Parfum"
+    },
+    {
+      "type": "text",
+      "id": "chip_2",
+      "label": "筛选 Chip 2",
+      "default": "In Stock Only"
+    },
+    {
+      "type": "text",
+      "id": "chip_3",
+      "label": "筛选 Chip 3",
+      "default": "$100 — $240"
+    },
+    {
+      "type": "text",
+      "id": "category_meta",
+      "label": "Category 右上角数量",
+      "default": "05"
+    },
+    {
+      "type": "text",
+      "id": "count_all",
+      "label": "All Offerings 数量",
+      "default": "24"
+    },
+    {
+      "type": "text",
+      "id": "count_parfum",
+      "label": "Haute Parfumerie 数量",
+      "default": "12"
+    },
+    {
+      "type": "text",
+      "id": "count_incense",
+      "label": "Incense & Vessels 数量",
+      "default": "4"
+    },
+    {
+      "type": "text",
+      "id": "count_candles",
+      "label": "Botanical Candles 数量",
+      "default": "5"
+    },
+    {
+      "type": "text",
+      "id": "count_body",
+      "label": "Ritual Body Care 数量",
+      "default": "3"
+    },
+    {
+      "type": "text",
+      "id": "count_woody",
+      "label": "Woody & Resinous 数量",
+      "default": "9"
+    },
+    {
+      "type": "text",
+      "id": "count_smoky",
+      "label": "Smoky Amber & Oud 数量",
+      "default": "6"
+    },
+    {
+      "type": "text",
+      "id": "count_citrus",
+      "label": "Crisp Citrus & Herb 数量",
+      "default": "5"
+    },
+    {
+      "type": "text",
+      "id": "count_floral",
+      "label": "Powdery White Floral 数量",
+      "default": "4"
+    },
+    {
+      "type": "textarea",
+      "id": "guarantee_text",
+      "label": "保障文案",
+      "default": "Complimentary 2ml trial vial included with each full-size flacon. Unopened returns accepted within 30 days."
+    },
+    {
+      "type": "header",
+      "content": "Discovery Coffret 横幅"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_promo",
+      "label": "显示 Discovery 横幅",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "promo_eyebrow",
+      "label": "横幅眉题",
+      "default": "Introductory Protocol"
+    },
+    {
+      "type": "text",
+      "id": "promo_title",
+      "label": "横幅标题",
+      "default": "The Bespoke Discovery Coffret"
+    },
+    {
+      "type": "textarea",
+      "id": "promo_text",
+      "label": "横幅文案",
+      "default": "Experience five iconic olfactory silhouettes poured into 2ml hand-crimped glass vials. The complete purchase price is fully credited toward your subsequent full flacon acquisition."
+    },
+    {
+      "type": "text",
+      "id": "promo_button_label",
+      "label": "横幅按钮",
+      "default": "Acquire Discovery Set — $45"
+    },
+    {
+      "type": "url",
+      "id": "promo_button_link",
+      "label": "横幅按钮链接"
+    },
+    {
+      "type": "text",
+      "id": "promo_note",
+      "label": "横幅附注",
+      "default": "Complimentary Postage"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_image",
+      "label": "横幅图片（空则用设计稿图）"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 6,
+      "max": 24,
+      "step": 2,
+      "label": "每页商品数",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "默认列数",
+      "options": [
+        { "value": "3", "label": "3 列" },
+        { "value": "4", "label": "4 列" }
+      ],
+      "default": "3"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,104 @@
+/* built-from-src: do not edit in theme/ — edit under src/ */
+/* Brand pillars strip — 对齐设计稿红框区域，字号全部 px */
+
+.section-qs-usps .qs-usps,
+.qs-usps {
+  padding: 36px 0 !important;
+  background: #eeeeec !important;
+  border: 0 !important;
+  border-top: 1px solid #e2e3e1 !important;
+  border-bottom: 1px solid #e2e3e1 !important;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.qs-usps__inner {
+  width: 100%;
+}
+
+.section-qs-usps .qs-usps__grid,
+.qs-usps__grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 24px 28px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  align-items: start;
+}
+
+.section-qs-usps .qs-usps__item,
+.qs-usps__item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  text-align: left !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.qs-usps__icon {
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  margin-top: 1px;
+  color: #735a36;
+}
+
+.qs-usps__icon img,
+.qs-usps__svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+.qs-usps__copy {
+  min-width: 0;
+  flex: 1;
+  text-align: left !important;
+}
+
+.qs-usps__title {
+  margin: 0 0 6px !important;
+  padding: 0 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 16px !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: #2a2a2a !important;
+  text-align: left !important;
+}
+
+.qs-usps__text {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 18px !important;
+  letter-spacing: 0.01em;
+  color: #444748 !important;
+  text-align: left !important;
+}
+
+@media (max-width: 989px) {
+  .section-qs-usps .qs-usps__grid,
+  .qs-usps__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 549px) {
+  .qs-usps {
+    padding: 28px 0 !important;
+  }
+
+  .section-qs-usps .qs-usps__grid,
+  .qs-usps__grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+}

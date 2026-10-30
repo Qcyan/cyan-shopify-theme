@@ -1,65 +1,350 @@
 /* built-from-src: do not edit in theme/ — edit under src/ */
+/* Hero — 自包含样式，不依赖 theme.css 是否加载；字号对齐 DESIGN.md */
+
 .hero-banner {
-  display: flex;
-  align-items: center;
-  min-height: 80vh;
-  padding: 120px 0;
+  --hb-display: 36px;
+  --hb-display-lh: 44px;
+  --hb-body-lg: 16px;
+  --hb-body-lg-lh: 26px;
+  --hb-body-md: 14px;
+  --hb-body-sm: 12px;
+  --hb-body-sm-lh: 18px;
+  --hb-headline-sm: 18px;
+  --hb-headline-sm-lh: 24px;
+  --hb-label-lg: 12px;
+  --hb-label-sm: 10px;
+  --hb-ink: #2a2a2a;
+  --hb-muted: #444748;
+  --hb-secondary: #735a36;
+  --hb-outline: #747878;
+  --hb-surface: #f9f9f7;
+  --hb-border: #eae6df;
+
+  background: #f4f4f2;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.hero-banner__shell {
+  width: 100%;
 }
 
 .hero-banner__inner {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 3.5rem);
   align-items: center;
-  width: 100%;
+  min-height: 720px;
+  padding: 4.5rem 0 5rem;
 }
 
+/* —— Eyebrow: label-caps-sm —— */
+.hero-banner__eyebrow-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.hero-banner__eyebrow-line {
+  width: 2rem;
+  height: 1px;
+  background: var(--hb-secondary);
+  flex-shrink: 0;
+}
+
+.hero-banner__eyebrow {
+  margin: 0;
+  font-size: var(--hb-label-sm);
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hb-secondary);
+}
+
+/* —— Title: display 36/300 —— */
 .hero-banner__title {
-  margin: 0 0 20px;
-  font-size: 48px;
-  font-weight: 500;
-  color: #2a2a2a;
-  line-height: 1.2;
+  margin: 0 0 1.25rem;
+  font-size: var(--hb-display);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: var(--hb-display-lh);
+  text-transform: uppercase;
+  color: var(--hb-ink);
 }
 
+.hero-banner__title-italic {
+  display: block;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--hb-muted);
+  text-transform: none;
+}
+
+/* —— Desc: body-lg —— */
 .hero-banner__desc {
-  margin: 0 0 32px;
-  max-width: 480px;
-  color: #555;
-  font-size: 16px;
-  line-height: 1.7;
+  margin: 0 0 2rem;
+  max-width: 32rem;
+  font-size: var(--hb-body-lg);
+  line-height: var(--hb-body-lg-lh);
+  font-weight: 300;
+  letter-spacing: 0;
+  color: var(--hb-muted);
 }
 
-.hero-banner__btn {
-  display: inline-block;
-  padding: 14px 32px;
-  background: #c8a97e;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 2px;
+.hero-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
-.hero-banner__btn:hover {
-  opacity: 0.9;
+/* —— Primary CTA: 黑底白字，压过 Dawn link 样式 —— */
+.hero-banner a.hero-banner__cta.button,
+.hero-banner .hero-banner__cta.button,
+.hero-banner .hero-banner__cta {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px !important;
+  padding: 0 2rem !important;
+  margin: 0 !important;
+  background: var(--hb-ink) !important;
+  background-color: var(--hb-ink) !important;
+  color: #fafaf8 !important;
+  border: 1px solid var(--hb-ink) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-family: inherit !important;
+  font-size: var(--hb-label-lg) !important;
+  font-weight: 500 !important;
+  line-height: 16px !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  text-underline-offset: unset !important;
 }
 
-.hero-banner__media img {
+.hero-banner a.hero-banner__cta.button:hover,
+.hero-banner .hero-banner__cta:hover {
+  background: #151616 !important;
+  color: #fafaf8 !important;
+  opacity: 0.92;
+  text-decoration: none !important;
+}
+
+/* —— Secondary text link —— */
+.hero-banner a.hero-banner__text-link,
+.hero-banner .hero-banner__text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--hb-label-lg);
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  color: var(--hb-ink) !important;
+  background: transparent !important;
+  border: 0 !important;
+  min-height: 48px;
+  padding: 0 0.25rem;
+}
+
+.hero-banner .hero-banner__text-link:hover {
+  color: var(--hb-secondary) !important;
+}
+
+.hero-banner__text-link-arrow {
+  transition: transform 0.2s ease;
+}
+
+.hero-banner .hero-banner__text-link:hover .hero-banner__text-link-arrow {
+  transform: translateX(3px);
+}
+
+/* —— Stats —— */
+.hero-banner__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(249, 249, 247, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--hb-border);
+}
+
+.hero-banner__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.hero-banner__stat-value {
+  font-size: var(--hb-headline-sm);
+  font-weight: 500;
+  line-height: var(--hb-headline-sm-lh);
+  letter-spacing: -0.01em;
+  color: var(--hb-ink);
+}
+
+.hero-banner__stat-label {
+  font-size: var(--hb-label-sm);
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hb-outline);
+}
+
+/* —— Media —— */
+.hero-banner__media-wrap {
+  position: relative;
+}
+
+.hero-banner__media {
+  position: relative;
+  overflow: hidden;
+  background: #e2e3e1;
+  aspect-ratio: 4 / 5;
+  max-height: 660px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+.hero-banner__img,
+.hero-banner__placeholder {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
 }
 
-@media (max-width: 768px) {
-  .hero-banner {
-    padding: 60px 0;
-    min-height: auto;
-  }
+.hero-banner__media:hover .hero-banner__img {
+  transform: scale(1.03);
+}
 
+/* 图底信息条 */
+.hero-banner__media-caption {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(249, 249, 247, 0.92);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--hb-border);
+}
+
+.hero-banner__media-caption-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.hero-banner__media-label {
+  margin: 0;
+  font-size: var(--hb-label-sm);
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hb-secondary);
+}
+
+.hero-banner__media-caption-title {
+  margin: 0;
+  font-size: var(--hb-headline-sm);
+  font-weight: 500;
+  line-height: var(--hb-headline-sm-lh);
+  letter-spacing: -0.01em;
+  color: var(--hb-ink);
+}
+
+.hero-banner__media-price {
+  flex-shrink: 0;
+  font-size: var(--hb-body-md);
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--hb-ink);
+  white-space: nowrap;
+}
+
+/* 浮动评语卡 — 对齐设计稿左下角 */
+.hero-banner__quote {
+  display: none;
+  position: absolute;
+  left: -3rem;
+  bottom: -1.5rem;
+  z-index: 3;
+  max-width: 17rem;
+  padding: 1rem;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.hero-banner__quote-title {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 0.35rem;
+  font-size: var(--hb-label-sm);
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hb-ink);
+}
+
+.hero-banner__quote-star {
+  color: var(--hb-secondary);
+  font-size: 14px;
+}
+
+.hero-banner__quote-text {
+  margin: 0;
+  font-size: var(--hb-body-sm);
+  line-height: var(--hb-body-sm-lh);
+  font-style: italic;
+  color: var(--hb-muted);
+}
+
+@media (min-width: 1200px) {
+  .hero-banner__quote {
+    display: block;
+  }
+}
+
+@media (max-width: 989px) {
   .hero-banner__inner {
     grid-template-columns: 1fr;
+    min-height: auto;
+    padding: 2.5rem 0 3rem;
   }
 
   .hero-banner__title {
-    font-size: 32px;
+    font-size: 30px;
+    line-height: 38px;
+  }
+
+  .hero-banner__media-wrap {
+    order: -1;
+  }
+
+  .hero-banner__media {
+    max-height: none;
+    aspect-ratio: 1;
+  }
+
+  .hero-banner__quote {
+    display: none;
   }
 }
