@@ -1,0 +1,12 @@
+{
+  "generatedAt": "2026-10-29T07:07:20.143Z",
+  "items": [
+    {
+      "name": "hero-banner",
+      "kind": "sections",
+      "src": "sections/marketing/hero-banner/hero-banner.liquid",
+      "liquidOut": "sections/hero-banner.liquid",
+      "cssOut": "assets/section-hero-banner.css"
+    }
+  ]
+}
