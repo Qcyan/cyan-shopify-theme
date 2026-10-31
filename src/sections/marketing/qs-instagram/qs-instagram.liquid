@@ -1,6 +1,6 @@
 {% comment %}
-  Instagram 社交�?�?手动上传图片（作品集无需�?IG API�?{% endcomment %}
-
+  Instagram 社交墙 — 手动上传图片（作品集无需接 IG API）
+{% endcomment %}
 
 <section class="qs-instagram">
   <div class="page-width">
@@ -48,55 +48,55 @@
 
 {% schema %}
 {
-  "name": "Instagram 社交�?,
+  "name": "Instagram gallery",
   "tag": "section",
   "class": "section-qs-instagram",
   "settings": [
     {
       "type": "text",
       "id": "title",
-      "label": "标题",
+      "label": "Title",
       "default": "In real life"
     },
     {
       "type": "textarea",
       "id": "subtitle",
-      "label": "副标�?,
+      "label": "Subtitle",
       "default": "Soft light, quiet details—tag us to be featured."
     },
     {
       "type": "url",
       "id": "instagram_url",
-      "label": "Instagram 链接"
+      "label": "Instagram URL"
     },
     {
       "type": "text",
       "id": "instagram_label",
-      "label": "链接文案",
+      "label": "Link label",
       "default": "@yourbrand"
     }
   ],
   "blocks": [
     {
       "type": "image",
-      "name": "图片",
+      "name": "Image",
       "settings": [
         {
           "type": "image_picker",
           "id": "image",
-          "label": "图片"
+          "label": "Image"
         },
         {
           "type": "url",
           "id": "link",
-          "label": "点击跳转（可选）"
+          "label": "Link (optional)"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Instagram 社交�?,
+      "name": "Instagram gallery",
       "blocks": [
         { "type": "image" },
         { "type": "image" },

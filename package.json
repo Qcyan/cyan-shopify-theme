@@ -7,13 +7,13 @@
   "scripts": {
     "dev": "npm run build:liquid && npx --yes concurrently -k -n liquid,vite,shopify -c blue,magenta,green \"npm run watch:liquid\" \"npm run dev:vite\" \"npm run dev:shopify\"",
     "build": "npm run build:liquid && npm run build:vite",
-    "push": "npm run build && npx --yes @shopify/cli theme push --path theme --store cyan-dev-store1.myshopify.com",
-    "pull": "npx --yes @shopify/cli theme pull --path theme --store cyan-dev-store1.myshopify.com",
+    "push": "npm run build && node scripts/run-with-proxy.mjs npx --yes @shopify/cli theme push --path theme --store cyan-dev-store1.myshopify.com",
+    "pull": "node scripts/run-with-proxy.mjs npx --yes @shopify/cli theme pull --path theme --store cyan-dev-store1.myshopify.com",
     "build:liquid": "node scripts/build-liquid.mjs",
     "build:vite": "vite build",
     "watch:liquid": "node scripts/watch-liquid.mjs",
     "dev:vite": "vite",
-    "dev:shopify": "npx --yes @shopify/cli theme dev --path theme --store cyan-dev-store1.myshopify.com"
+    "dev:shopify": "node scripts/run-with-proxy.mjs npx --yes @shopify/cli theme dev --path theme --store cyan-dev-store1.myshopify.com"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",

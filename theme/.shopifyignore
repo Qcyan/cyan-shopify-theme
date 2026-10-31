@@ -1,0 +1,3 @@
+# Vite 内部目录不可上传（Shopify assets 不允许子文件夹）
+assets/.vite/*
+assets/.vite/**/*
